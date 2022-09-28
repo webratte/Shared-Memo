@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Shared Memo</title>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width"/>
+        <script src="webxdc.js"></script>
+        <style type="text/css">
+            body {
+                font-family: Helvetica, Arial, sans-serif;
+                background-color: #ECDD09;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Shared Memo</h1>
+         
+        <form>
+        <br>
+           <input type="submit" id="updateButton" onclick="sendMsg(); return false;" value="   Update Memo  " /><br><br>
+            <textarea id="input" name="textfeld_01" rows="20" cols="3000000" wrap="soft" style="max-width: calc(100% - 7px);" autofocus="true" onclick=activateButton() ></textarea>
+        </form>
+        <p id="output"></p>   
+        <p><em><small id="deviceName"></small></em></p>
+        <script>
+        // handle past and future state updates
+        window.webxdc.setUpdateListener(function (update) {
+            document.getElementById('input').innerHTML = update.payload.msg;
+         });
+        
+        function activateButton() {
+        		document.getElementById("updateButton").disabled = false
+        		document.getElementById('output').innerHTML = ""	
+        }
+
+        function sendMsg() {
+        		document.getElementById('output').innerHTML = "Update was sent!"
+        		document.getElementById("updateButton").disabled = true
+        		sender = document.getElementById("")
+        		msg = document.getElementById("input").value;
+            info = ' Memo was updated ';
+            document.getElementById("input").value = msg; //dont clear the textarea
+
+
+            // send new updates
+            window.webxdc.sendUpdate({
+                payload: {
+                    name: window.webxdc.selfName,
+                    msg,
+                },
+                info,
+            }, info);
+        }
+
+        //(function () {
+       //     window.deviceName.innerHTML = 'this is ' + window.webxdc.name;
+      //  })()
+        </script>
+    </body>
+</html>

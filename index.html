@@ -18,7 +18,7 @@
         <form>
         <br>
            <input type="submit" id="updateButton" onclick="sendMsg(); return false;" value="   Update Memo  " /><br><br>
-            <textarea id="input" name="textfeld_01" rows="20" cols="300" wrap="soft" style="max-width: calc(100% - 7px);" autofocus="true" onclick=activateButton() ></textarea>
+            <textarea id="input" name="textfeld_01" rows="20" cols="300" wrap="soft" style="max-width: calc(100% - 7px);" autofocus="true" oninput=activateButton() ></textarea>
         </form>
         <p id="output"></p>   
         <p><em><small id="deviceName"></small></em></p>
@@ -28,7 +28,7 @@
             document.getElementById('input').innerHTML = update.payload.msg;
          });
         
-		  document.getElementById("updateButton").disabled = true // disable UpdateButton until the user clicked the textarea
+		  document.getElementById("updateButton").disabled = true // disable UpdateButton until the user changed the textarea
 		  
         function activateButton() {
         
@@ -52,6 +52,13 @@
                     msg,
                 },
                 info,
+            }, info);
+        }
+
+        </script>
+    </body>
+</html>
+
             }, info);
         }
 

@@ -18,7 +18,7 @@
         <form>
         <br>
            <input type="submit" id="updateButton" onclick="sendMsg(); return false;" value="   Update Memo  " /><br><br>
-            <textarea id="input" name="textfeld_01" rows="20" cols="3000000" wrap="soft" style="max-width: calc(100% - 7px);" autofocus="true" onclick=activateButton() ></textarea>
+            <textarea id="input" name="textfeld_01" rows="20" cols="300" wrap="soft" style="max-width: calc(100% - 7px);" autofocus="true" onclick=activateButton() ></textarea>
         </form>
         <p id="output"></p>   
         <p><em><small id="deviceName"></small></em></p>
@@ -28,12 +28,15 @@
             document.getElementById('input').innerHTML = update.payload.msg;
          });
         
+		  document.getElementById("updateButton").disabled = true
+		  
         function activateButton() {
-        		document.getElementById("updateButton").disabled = false
+            document.getElementById("updateButton").disabled = false
         		document.getElementById('output').innerHTML = ""	
         }
 
         function sendMsg() {
+           
         		document.getElementById('output').innerHTML = "Update was sent!"
         		document.getElementById("updateButton").disabled = true
         		sender = document.getElementById("")
@@ -52,9 +55,6 @@
             }, info);
         }
 
-        //(function () {
-       //     window.deviceName.innerHTML = 'this is ' + window.webxdc.name;
-      //  })()
         </script>
     </body>
 </html>

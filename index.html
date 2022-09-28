@@ -28,22 +28,22 @@
             document.getElementById('input').innerHTML = update.payload.msg;
          });
         
-		  document.getElementById("updateButton").disabled = true
+		  document.getElementById("updateButton").disabled = true // disable UpdateButton until the user clicked the textarea
 		  
         function activateButton() {
+        
             document.getElementById("updateButton").disabled = false
         		document.getElementById('output').innerHTML = ""	
         }
 
         function sendMsg() {
            
-        		document.getElementById('output').innerHTML = "Update was sent!"
-        		document.getElementById("updateButton").disabled = true
-        		sender = document.getElementById("")
-        		msg = document.getElementById("input").value;
-            info = ' Memo was updated ';
-            document.getElementById("input").value = msg; //dont clear the textarea
-
+        	document.getElementById('output').innerHTML = "Update was sent!"
+        	document.getElementById("updateButton").disabled = true
+        	sender = document.getElementById("")
+        	msg = document.getElementById("input").value;
+            	info = ' Memo was updated by '+window.webxdc.selfName;
+            	document.getElementById("input").value = msg; //dont clear the textarea
 
             // send new updates
             window.webxdc.sendUpdate({

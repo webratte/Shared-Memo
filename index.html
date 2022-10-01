@@ -27,8 +27,9 @@
         window.webxdc.setUpdateListener(function (update) {
             document.getElementById('input').innerHTML = update.payload.msg;
          });
-        
+        	  
 		  document.getElementById("updateButton").disabled = true // disable UpdateButton until the user changed the textarea
+		  document.getElementById('output').innerHTML = ""	
 		  
         function activateButton() {
         
@@ -38,8 +39,8 @@
 
         function sendMsg() {
            
-        	document.getElementById('output').innerHTML = "Update was sent!"
         	document.getElementById("updateButton").disabled = true
+        	document.getElementById("updateButton").value="   Update was sent   "
         	sender = document.getElementById("")
         	msg = document.getElementById("input").value;
             	info = ' Memo was updated by '+window.webxdc.selfName;
@@ -54,8 +55,7 @@
                 info,
             }, info);
         }
-
-        </script>
+        </script>  
     </body>
 </html>
     </body>

@@ -23,45 +23,40 @@
         <p id="output"></p>   
         <p><em><small id="deviceName"></small></em></p>
         <script>
-        
         // handle past and future state updates
-        		window.webxdc.setUpdateListener(function (update) {
+        window.webxdc.setUpdateListener(function (update) {
             document.getElementById('input').innerHTML = update.payload.msg;
-            update.summary;
-            lastUpdate =update.summary;
-            document.getElementById('output').innerHTML = lastUpdate;
          });
         	  
-		  		document.getElementById("updateButton").disabled = true // disable UpdateButton until the user changed the textarea
+		  document.getElementById("updateButton").disabled = true // disable UpdateButton until the user changed the textarea
+		  document.getElementById('output').innerHTML = ""	
 		  
         function activateButton() {
-        
-            document.getElementById("updateButton").disabled = false
-            document.getElementById("updateButton").value="   Update Memo  "
-        		lastUpdate = "Update: "+window.webxdc.selfName;
-        }
 
+            document.getElementById("updateButton").disabled = false
+        		document.getElementById('output').innerHTML = ""	
+        }
+		
         function sendMsg() {
            
-        		document.getElementById("updateButton").disabled = true
-        		document.getElementById("updateButton").value="   Update was sent   "
-        		sender = document.getElementById("")
-				msg = document.getElementById("input").value;
-				info = ' Memo was updated by '+window.webxdc.selfName;
-
+        	document.getElementById("updateButton").disabled = true
+        	document.getElementById("updateButton").value="   Update was sent   "
+        	sender = document.getElementById("")
+        	msg = document.getElementById("input").value;
+            	info = ' Memo was updated by '+window.webxdc.selfName;
+            	document.getElementById("input").value = msg; //dont clear the textarea
             // send new updates
             window.webxdc.sendUpdate({
                 payload: {
                     name: window.webxdc.selfName,
-                    msg, 
+                    msg,
                 },
-                summary: lastUpdate,
                 info,
             }, info);
         }
         </script> 
         <font size="2">
-				Version 1.1 Beta 1
+				Version 1.0
 			</font>  
     </body>
 </html>

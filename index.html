@@ -26,6 +26,7 @@
         // handle past and future state updates
         window.webxdc.setUpdateListener(function (update) {
             document.getElementById('input').innerHTML = update.payload.msg;
+            update.summary;
          });
         	  
 		  document.getElementById("updateButton").disabled = true // disable UpdateButton until the user changed the textarea
@@ -35,7 +36,8 @@
         
             document.getElementById("updateButton").disabled = false
             document.getElementById("updateButton").value="   Update Memo  "
-        		document.getElementById('output').innerHTML = ""	
+        		document.getElementById('output').innerHTML = ""
+        		lastUpdate = "Update: "+window.webxdc.selfName;
         }
 
         function sendMsg() {
@@ -44,8 +46,7 @@
         	document.getElementById("updateButton").value="   Update was sent   "
         	sender = document.getElementById("")
         	msg = document.getElementById("input").value;
-            	info = ' Memo was updated by '+window.webxdc.selfName;
-            	document.getElementById("input").value = msg; //dont clear the textarea
+         info = ' Memo was updated by '+window.webxdc.selfName;
 
             // send new updates
             window.webxdc.sendUpdate({
@@ -53,6 +54,7 @@
                     name: window.webxdc.selfName,
                     msg, 
                 },
+                summary: lastUpdate,
                 info,
             }, info);
         }

@@ -23,30 +23,31 @@
         <p id="output"></p>   
         <p><em><small id="deviceName"></small></em></p>
         <script>
+        
         // handle past and future state updates
-        window.webxdc.setUpdateListener(function (update) {
+        		window.webxdc.setUpdateListener(function (update) {
             document.getElementById('input').innerHTML = update.payload.msg;
             update.summary;
+            lastUpdate =update.summary;
+            document.getElementById('output').innerHTML = lastUpdate;
          });
         	  
-		  document.getElementById("updateButton").disabled = true // disable UpdateButton until the user changed the textarea
-		  document.getElementById('output').innerHTML = ""	
+		  		document.getElementById("updateButton").disabled = true // disable UpdateButton until the user changed the textarea
 		  
         function activateButton() {
         
             document.getElementById("updateButton").disabled = false
             document.getElementById("updateButton").value="   Update Memo  "
-        		document.getElementById('output').innerHTML = ""
         		lastUpdate = "Update: "+window.webxdc.selfName;
         }
 
         function sendMsg() {
            
-        	document.getElementById("updateButton").disabled = true
-        	document.getElementById("updateButton").value="   Update was sent   "
-        	sender = document.getElementById("")
-        	msg = document.getElementById("input").value;
-         info = ' Memo was updated by '+window.webxdc.selfName;
+        		document.getElementById("updateButton").disabled = true
+        		document.getElementById("updateButton").value="   Update was sent   "
+        		sender = document.getElementById("")
+				msg = document.getElementById("input").value;
+				info = ' Memo was updated by '+window.webxdc.selfName;
 
             // send new updates
             window.webxdc.sendUpdate({
@@ -60,7 +61,7 @@
         }
         </script> 
         <font size="2">
-				Version 1.1
+				Version 1.1 Beta 1
 			</font>  
     </body>
 </html>

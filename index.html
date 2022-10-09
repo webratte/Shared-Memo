@@ -9,6 +9,7 @@
             body {
                 font-family: Helvetica, Arial, sans-serif;
                 background-color: #ECDD09;
+                height:100%;
             }
         </style>
     </head>
@@ -17,7 +18,7 @@
          
         <form>
         <br>
-           <input type="submit" id="updateButton" onclick="sendMsg(); return false;" value="   Update Memo  " /><br><br>
+           <input type="submit" id="updateButton" onclick="sendMsg(); return false;" value="   Update Memo   " ><br><br>
             <textarea id="input" name="textfeld_01" rows="20" cols="300" wrap="soft" style="max-width: calc(100% - 7px);" autofocus="true" oninput=activateButton() ></textarea>
         </form>
         <p id="output"></p>   
@@ -25,43 +26,40 @@
         <script>
         
         // handle past and future state updates
+			document.getElementById("updateButton").disabled = true // disable UpdateButton until the user changed the textarea
 			window.webxdc.setUpdateListener(function (update) {
 			document.getElementById('input').innerHTML = update.payload.msg;
-			update.summary;
-			lastUpdate =update.summary;
-			document.getElementById('output').innerHTML = "Last "+lastUpdate;
+			document.getElementById('output').innerHTML = "Last "+ update.summary + "<br>" + "<small>" + update.payload.date;
          });
-        	  
-			document.getElementById("updateButton").disabled = true // disable UpdateButton until the user changed the textarea
 		  
 		function activateButton() {
         
 			document.getElementById("updateButton").disabled = false
-			document.getElementById("updateButton").value="   Update Memo  "
-			lastUpdate = "Update: "+window.webxdc.selfName;
+			document.getElementById("updateButton").value="   Update Memo   "
         }
 
 		function sendMsg() {
            
 			document.getElementById("updateButton").disabled = true
 			document.getElementById("updateButton").value="   Update was sent   "
-			sender = document.getElementById("")
-			msg = document.getElementById("input").value;
-				info = ' Memo was updated by '+window.webxdc.selfName;
+			lastUpdate = "Update: "+window.webxdc.selfName;
+			msg = document.getElementById("input").value
+			date = Date();
+			info = ' Memo was updated by '+window.webxdc.selfName;
 
 		// send new updates
 		window.webxdc.sendUpdate({
 			payload: {
 				name: window.webxdc.selfName,
-					msg, 
+					msg, date,
 					},
 					summary: lastUpdate,
 					info,
             }, info);
         }
-        </script> 
-        <font size="2">
-				Version 1.1 Beta 1
-			</font>  
+			</script> 
+				<font size="1">
+					Version 1.1 Beta 1
+				</font>  
     </body>
 </html>

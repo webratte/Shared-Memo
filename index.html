@@ -1,42 +1,45 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Shared Memo</title>
-        <meta charset="utf-8"/>
-        <meta name="viewport" content="width=device-width"/>
-        <script src="webxdc.js"></script>
-        <style type="text/css">
-            body {
-                font-family: Helvetica, Arial, sans-serif;
-                background-color: #ECDD09;
-                height:100%;
-            }
-        </style>
-    </head>
-    <body>
-        <h1>Shared Memo</h1>
-         
-        <form>
-        <br>
-           <input type="submit" id="updateButton" onclick="sendMsg(); return false;" value="   Update Memo   " ><br><br>
-            <textarea id="input" name="textfeld_01" rows="20" cols="300" wrap="soft" style="max-width: calc(100% - 7px);" autofocus="true" oninput=activateButton() ></textarea>
-        </form>
-        <p id="output"></p>   
-        <p><em><small id="deviceName"></small></em></p>
-        <script>
-        
-        // handle past and future state updates
+	<head>
+		<title>Shared Memo</title>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width"/>
+		<script src="webxdc.js"></script>
+		<style type="text/css">
+			body {
+				font-family: Helvetica, Arial, sans-serif;
+				background-color: #ECDD09;
+				height:100%;
+				}
+			#footer {
+				position: absolute;
+				bottom: 5px;
+				}
+		</style>
+	</head>
+	<body>	
+		<h1>Shared Memo</h1>
+		<form>
+			<br>
+			<input type="submit" id="updateButton" onclick="sendMsg(); return false;" value="   Update Memo   " ><br><br>
+			<textarea id="input" name="textfeld_01" rows="20" cols="300" wrap="soft" style="max-width: calc(100% - 7px);" autofocus="true" oninput=activateButton() ></textarea>
+		</form>
+			<p id="output"></p>   
+			<p><em><small id="deviceName"></small></em></p>
+		
+		<script>
+			// handle past and future state updates
 			document.getElementById("updateButton").disabled = true // disable UpdateButton until the user changed the textarea
 			window.webxdc.setUpdateListener(function (update) {
 			document.getElementById('input').innerHTML = update.payload.msg;
 			document.getElementById('output').innerHTML = "Last "+ update.summary + "<br>" + "<small>" + update.payload.date;
-         });
+			});
 		  
 		function activateButton() {
         
 			document.getElementById("updateButton").disabled = false
 			document.getElementById("updateButton").value="   Update Memo   "
-        }
+			}
 
 		function sendMsg() {
            
@@ -56,10 +59,13 @@
 					summary: lastUpdate,
 					info,
             }, info);
-        }
-			</script> 
-				<font size="1">
-					Version 1.1 Beta 1
-				</font>  
-    </body>
+			}
+		</script> 
+				
+		<div id="footer">
+			<font size="1">
+				Version 1.1 Beta 2 by Webratte
+			</font> 
+		</div>
+	</body>
 </html>

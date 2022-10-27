@@ -32,10 +32,10 @@
 			window.webxdc.setUpdateListener(function (update) {
 			window.msg = update.payload.msg;							
 			document.getElementById('input').value = msg;
-			window.prvtmp = window.msg;
-			window.prv = update.payload.prv;
-				if (window.prv === undefined) {
-					window.prv = "";
+			window.tmpContent = window.msg;
+			window.prvContent = update.payload.prvContent;
+				if (window.prvContent === undefined) {
+					window.prvContent = "";
 				};	
 			document.getElementById('output').innerHTML = "Last "+ update.summary + "<br>" + "<small>" + update.payload.date;
 			});
@@ -51,7 +51,7 @@
 			document.getElementById('previous-button').style="display: none"; //hide Previous Button
 			document.getElementById('edit-button').style="display: yes; float: right";		//make Edit Button visible			
 			window.msg = document.getElementById("input").value;
-			document.getElementById('input').value = prv;  
+			document.getElementById('input').value = prvContent;  
 			document.getElementById("updateButton").disabled = true;
 			};	
 
@@ -72,14 +72,14 @@
 			lastUpdate = "Update: "+window.webxdc.selfName;
 			msg = document.getElementById("input").value;
 			date = Date();
-			window.prv = window.prvtmp;
+			window.prvContent = window.tmpContent;
 			info = ' Memo was updated by '+window.webxdc.selfName;
 
 		// send new updates
 		window.webxdc.sendUpdate({
 			payload: {
 				name: window.webxdc.selfName,
-					msg, prv, date,
+					msg, prvContent, date,
 					},
 					summary: lastUpdate,
 					info,

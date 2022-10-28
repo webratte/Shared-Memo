@@ -14,12 +14,12 @@
 	</head>
 	<body>
 		<font size="6"> Shared Memo </font>
-		<font size="1"> by Webratte Version 1.2 </font>
+		<font size="1"> by Webratte Version 1.2.1 </font>
 		<form>
 			<br>
 			<input type="submit" id="updateButton" onclick="sendMsg(); return false;" value="   Update Memo   " >
-			<input type="button" id="previous-button" onclick="showPrv();" style="float: right" value="    Previous    " >
-			<input type="button" id="edit-button" onclick="edit();"  style="display: none"; value="        Edit        "  ><br><br>
+			<input type="button" disabled id="previous-button" onclick="showPrv();" style="float: right" value="    Previous update   ">
+			<input type="button" id="edit-button" onclick="edit();"  style="display: none"; value="         Edit Memo        "  ><br><br>
 			<textarea id="input" name="textfeld_01" rows="20" cols="300" wrap="soft" style="max-width: calc(100% - 7px);" autofocus="true" oninput=activateButton() ></textarea>
 		</form>
 			<p id="output"></p>   
@@ -28,16 +28,22 @@
 		<script>
 
 			// handle past and future state updates
-			document.getElementById("updateButton").disabled = true; // disableprv UpdateButton until the user changed the textarea
+			document.getElementById("updateButton").disabled = true; // disable prv UpdateButton until the user changed the textarea
 			window.webxdc.setUpdateListener(function (update) {
-			window.msg = update.payload.msg;							
-			document.getElementById('input').value = msg;
-			window.prvtmp = window.msg;
-			window.prv = update.payload.prv;
-				if (window.prv === undefined) {
-					window.prv = "";
-				};	
-			document.getElementById('output').innerHTML = "Last "+ update.summary + "<br>" + "<small>" + update.payload.date;
+			window.msg = update.payload.msg;
+			window.updateUser = update.summary;
+			window.updateTime = update.payload.date;						
+			document.getElementById('input').value = window.msg;
+			window.tmpContent = window.msg;
+			window.tmpUpdateUser = window.updateUser;
+			window.prvUpdateUser = update.payload.prvUpdateUser;
+			window.tmpUpdateTime = window.updateTime;
+			window.prvContent = update.payload.prvContent;
+			window.prvUpdateTime = update.payload.prvUpdateTime;
+				if (window.prvContent != undefined) {
+					document.getElementById('previous-button').disabled = false; 				//hide Previous Button if there is no previous update
+				};
+			document.getElementById('output').innerHTML = "Last "+ window.updateUser + "<br>" + "<small>" + window.updateTime;
 			});
 		  
 		function activateButton() {
@@ -48,10 +54,11 @@
 
 		function showPrv() {
 			document.getElementById('input').disabled = true;
-			document.getElementById('previous-button').style="display: none"; //hide Previous Button
+			document.getElementById('previous-button').style="display: none"; 				//hide Previous Button
 			document.getElementById('edit-button').style="display: yes; float: right";		//make Edit Button visible			
 			window.msg = document.getElementById("input").value;
-			document.getElementById('input').value = prv;  
+			document.getElementById('output').innerHTML = "This "+ window.prvUpdateUser + "<br>" + "<small>" + window.prvUpdateTime;
+			document.getElementById('input').value = window.prvContent;  
 			document.getElementById("updateButton").disabled = true;
 			};	
 
@@ -60,6 +67,7 @@
 			document.getElementById('previous-button').style="display: yes; float: right"; 
 			document.getElementById('edit-button').style="display: none";
 			document.getElementById('input').value = window.msg;
+			document.getElementById('output').innerHTML = "Last "+ window.updateUser + "<br>" + "<small>" + window.updateTime;
 				if (window.activated === true) {
 					activateButton();		
 				}			
@@ -70,16 +78,18 @@
 			document.getElementById("updateButton").disabled = true;
 			document.getElementById("updateButton").value="   Update was sent   ";
 			lastUpdate = "Update: "+window.webxdc.selfName;
-			msg = document.getElementById("input").value;
-			date = Date();
-			window.prv = window.prvtmp;
+			window.msg = document.getElementById("input").value;
+			window.date = Date();
+			window.prvContent = window.tmpContent;
+			window.prvUpdateUser = window.tmpUpdateUser;
+			window.prvUpdateTime = window.tmpUpdateTime;
 			info = ' Memo was updated by '+window.webxdc.selfName;
 
 		// send new updates
 		window.webxdc.sendUpdate({
 			payload: {
 				name: window.webxdc.selfName,
-					msg, prv, date,
+					msg, prvContent, prvUpdateUser, prvUpdateTime, date,
 					},
 					summary: lastUpdate,
 					info,

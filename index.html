@@ -5,6 +5,7 @@
 		<meta charset="utf-8"/>
 		<meta name="viewport" content="width=device-width"/>
 		<script src="webxdc.js"></script>
+		<script src="languages.js"></script>
 		<style type="text/css">
 			body {
 				font-family: Helvetica, Arial, sans-serif;
@@ -17,38 +18,43 @@
 		<font size="1"> by <a href="mailto:webratte+webxdc@mailbox.org">Webratte </a> Version 1.3 </font>
 		<form>
 			<br>
-			<input type="submit" id="updateButton" onclick="sendMsg(); return false;" value="   Update Memo   " >
-			<input type="button" disabled id="previous-button" onclick="showPrv();" style="float: right" value="    Previous update   ">
-			<input type="button" id="edit-button" onclick="edit();"  style="display: none"; value="         Edit Memo        "  ><br><br>
-			<textarea id="input" name="textfeld_01" rows="20" cols="300" wrap="soft" style="max-width: calc(100% - 7px);" autofocus="true" oninput=activateButton() ></textarea>
+			<input type="submit" id="updateButton" onclick="sendMsg(); return false;">
+			<input type="button" disabled id="previous-button" onclick="showPrv();" style="float: right">
+			<input type="button" id="edit-button" onclick="edit();"  style="display: none";><br><br>
+			<textarea id="input" name="textfeld_01" rows="20" cols="300" wrap="soft" data-preview="#preview" data-provide = "markdown" style="max-width: calc(100% - 7px);" autofocus="true" oninput=activateButton() ></textarea>
 		</form>
 			<p id="output"></p>   
 			<p><em><small id="deviceName"></small></em></p>
 		
 		<script>
-
+			//set user language
+ 			changeLanguage();
+         document.getElementById("updateButton").value=window.strSendMemo;
+         document.getElementById("previous-button").value=window.strPreviousUpdate;
+         document.getElementById("edit-button").value=window.strEditMemo;
+         
 			// handle past and future state updates
 			document.getElementById("updateButton").disabled = true; // disable prv UpdateButton until the user changed the textarea
 			window.webxdc.setUpdateListener(function (update) {
-			window.msg = update.payload.msg;
-			window.updateUser = update.summary;
-			window.updateTime = update.payload.date;						
-			document.getElementById('input').value = window.msg;
-			window.tmpContent = window.msg;
-			window.tmpUpdateUser = window.updateUser;
-			window.prvUpdateUser = update.payload.prvUpdateUser;
-			window.tmpUpdateTime = window.updateTime;
-			window.prvContent = update.payload.prvContent;
-			window.prvUpdateTime = update.payload.prvUpdateTime;
-				if (window.prvContent != undefined) {
-					document.getElementById('previous-button').disabled = false; 				//hide Previous Button if there is no previous update
-				};
-			document.getElementById('output').innerHTML = "Last "+ window.updateUser + "<br>" + "<small>" + window.updateTime;
+				window.msg = update.payload.msg;
+				window.updateUser = update.summary;
+				window.updateTime = update.payload.date;						
+				document.getElementById('input').value = window.msg;
+				window.tmpContent = window.msg;
+				window.tmpUpdateUser = window.updateUser;
+				window.prvUpdateUser = update.payload.prvUpdateUser;
+				window.tmpUpdateTime = window.updateTime;
+				window.prvContent = update.payload.prvContent;
+				window.prvUpdateTime = update.payload.prvUpdateTime;
+					if (window.prvContent != undefined) {
+						document.getElementById('previous-button').disabled = false; 				//hide Previous Button if there is no previous update
+					};
+				document.getElementById('output').innerHTML = strLast + " " + window.updateUser + "<br>" + "<small>" + window.updateTime;
 			});
-		  
+
 		function activateButton() {
 			document.getElementById("updateButton").disabled = false;
-			document.getElementById("updateButton").value="   Update Memo   ";
+			document.getElementById("updateButton").value = strSendMemo;
 			window.activated= true;
 			};
 
@@ -57,7 +63,7 @@
 			document.getElementById('previous-button').style="display: none"; 				//hide Previous Button
 			document.getElementById('edit-button').style="display: yes; float: right";		//make Edit Button visible			
 			window.msg = document.getElementById("input").value;
-			document.getElementById('output').innerHTML = "This "+ window.prvUpdateUser + "<br>" + "<small>" + window.prvUpdateTime;
+			document.getElementById('output').innerHTML = strThis + " "+ window.prvUpdateUser + "<br>" + "<small>" + window.prvUpdateTime;
 			document.getElementById('input').value = window.prvContent;  
 			document.getElementById("updateButton").disabled = true;
 			};	
@@ -67,7 +73,7 @@
 			document.getElementById('previous-button').style="display: yes; float: right"; 
 			document.getElementById('edit-button').style="display: none";
 			document.getElementById('input').value = window.msg;
-			document.getElementById('output').innerHTML = "Last "+ window.updateUser + "<br>" + "<small>" + window.updateTime;
+			document.getElementById('output').innerHTML = strLast + " " + window.updateUser + "<br>" + "<small>" + window.updateTime;
 				if (window.activated === true) {
 					activateButton();		
 				}			
@@ -76,14 +82,14 @@
 		function sendMsg() {
 			window.activated = false;
 			document.getElementById("updateButton").disabled = true;
-			document.getElementById("updateButton").value="   Update was sent   ";
-			lastUpdate = "Update: "+window.webxdc.selfName;
+			document.getElementById("updateButton").value = strWasSent;
+			lastUpdate = strUpdate + ": "+window.webxdc.selfName;
 			window.msg = document.getElementById("input").value;
 			window.date = Date();
 			window.prvContent = window.tmpContent;
 			window.prvUpdateUser = window.tmpUpdateUser;
 			window.prvUpdateTime = window.tmpUpdateTime;
-			info = ' Memo was updated by '+window.webxdc.selfName;
+			info = strInfoMessage + " " + window.webxdc.selfName;
 
 		// send new updates
 		window.webxdc.sendUpdate({

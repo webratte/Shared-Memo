@@ -13,7 +13,7 @@ Or simply share this App into your "saved messages" chat. You can add a shortcut
 
 You have just to run "create-xdc.sh"
 <br>
-The created "Memo.xdc" can now just sent in your Delta Chat group or also in every single Chat.
+The created "Memo.xdc" now can just sent in your Delta Chat group or also in every single Chat.
 
 ## Remember
 Every user have to use a Delta Chat App. Webxdc Apps works not with regular Mailclients

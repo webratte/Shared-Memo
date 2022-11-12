@@ -37,7 +37,7 @@
 			document.getElementById("updateButton").disabled = true; // disable prv UpdateButton until the user changed the textarea
 			window.webxdc.setUpdateListener(function (update) {
 				window.msg = update.payload.msg;
-				window.updateUser = update.summary;
+				window.updateUser = update.payload.updateUser;
 				window.updateTime = update.payload.date;						
 				document.getElementById('input').value = window.msg;
 				window.tmpContent = window.msg;
@@ -49,7 +49,7 @@
 					if (window.prvContent != undefined) {
 						document.getElementById('previous-button').disabled = false; 				//hide Previous Button if there is no previous update
 					};
-				document.getElementById('output').innerHTML = strLast + " " + window.updateUser + "<br>" + "<small>" + window.updateTime;
+				document.getElementById('output').innerHTML = strLast + " " + strUpdate +": " + window.updateUser + "<br>" + "<small>" + window.updateTime;
 			});
 
 		function activateButton() {
@@ -63,7 +63,7 @@
 			document.getElementById('previous-button').style="display: none"; 				//hide Previous Button
 			document.getElementById('edit-button').style="display: yes; float: right";		//make Edit Button visible			
 			window.msg = document.getElementById("input").value;
-			document.getElementById('output').innerHTML = strThis + " "+ window.prvUpdateUser + "<br>" + "<small>" + window.prvUpdateTime;
+			document.getElementById('output').innerHTML = strThis + " " + strUpdate +": " + window.prvUpdateUser + "<br>" + "<small>" + window.prvUpdateTime;
 			document.getElementById('input').value = window.prvContent;  
 			document.getElementById("updateButton").disabled = true;
 			};	
@@ -73,7 +73,7 @@
 			document.getElementById('previous-button').style="display: yes; float: right"; 
 			document.getElementById('edit-button').style="display: none";
 			document.getElementById('input').value = window.msg;
-			document.getElementById('output').innerHTML = strLast + " " + window.updateUser + "<br>" + "<small>" + window.updateTime;
+			document.getElementById('output').innerHTML = strLast + " " + strUpdate +": " + window.updateUser + "<br>" + "<small>" + window.updateTime;
 				if (window.activated === true) {
 					activateButton();		
 				}			
@@ -83,7 +83,8 @@
 			window.activated = false;
 			document.getElementById("updateButton").disabled = true;
 			document.getElementById("updateButton").value = strWasSent;
-			lastUpdate = strUpdate + ": "+window.webxdc.selfName;
+			lastUpdate = strUpdate + ": " + window.webxdc.selfName;
+			updateUser = window.webxdc.selfName;			
 			window.msg = document.getElementById("input").value;
 			window.date = Date();
 			window.prvContent = window.tmpContent;
@@ -95,7 +96,7 @@
 		window.webxdc.sendUpdate({
 			payload: {
 				name: window.webxdc.selfName,
-					msg, prvContent, prvUpdateUser, prvUpdateTime, date,
+					msg, updateUser, prvContent, prvUpdateUser, prvUpdateTime, date,
 					},
 					summary: lastUpdate,
 					info,

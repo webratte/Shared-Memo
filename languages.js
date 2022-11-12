@@ -10,7 +10,8 @@ function changeLanguage() {
 			strLast = "Letzte";
 			strThis = "Diese";
 			strUpdate = "Änderung";
-			strInfoMessage = "Memo wurde geändert durch";
+			//strInfoMessage = "Memo wurde geändert durch";
+			strInfoMessage = "Memo was updated by";
 			}
 		else if (browserLang == "en") {
 			//english
@@ -35,4 +36,3 @@ function changeLanguage() {
 			strInfoMessage = "Memo was updated by";
 		}
 };
-

@@ -83,7 +83,9 @@
 			window.activated = false;
 			document.getElementById("updateButton").disabled = true;
 			document.getElementById("updateButton").value = strWasSent;
-			lastUpdate = strUpdate + ": " + window.webxdc.selfName;
+			//keep "summary" in english until Delta Chat API will allow to translate it on receivers side		
+			//lastUpdate = strUpdate + ": " + window.webxdc.selfName;
+			lastUpdate = "Update: " + window.webxdc.selfName;
 			updateUser = window.webxdc.selfName;			
 			window.msg = document.getElementById("input").value;
 			window.date = Date();

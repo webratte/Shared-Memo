@@ -13,17 +13,6 @@ function changeLanguage() {
 			//strInfoMessage = "Memo wurde geändert durch";
 			strInfoMessage = "Memo was updated by";
 			}
-		else if (browserLang == "en") {
-			//english
-			strSendMemo = "Send Memo";
-			strWasSent = "Memo was sent";
-			strPreviousUpdate = "Previous Update";
-			strEditMemo = "Edit Memo";
-			strLast = "Last";
-			strThis = "This";
-			strUpdate = " Update ";
-			strInfoMessage = "Memo was updated by";
-			}
 		else if (browserLang == "fr") {
 			//french
 			strSendMemo = "Envoyer mémo";

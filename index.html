@@ -20,8 +20,13 @@
 			<br>
 			<input type="submit" id="updateButton" onclick="sendMsg(); return false;">
 			<input type="button" disabled id="previous-button" onclick="showPrv();" style="float: right">
-			<input type="button" id="edit-button" onclick="edit();"  style="display: none";><br><br>
-			<textarea id="input" name="textfeld_01" rows="20" cols="300" wrap="soft" data-preview="#preview" data-provide = "markdown" style="max-width: calc(100% - 7px);" autofocus="true" oninput=activateButton() ></textarea>
+			<input type="button" id="edit-button" onclick="edit();"  style="display: none";><br>
+			<div style="text-align:center;">
+				<input type="submit" id="cancelButton" onclick="cancel();" style="display: none">
+				<input type="text" id="title" oninput=showButton() style="background-color: #ECDD09">
+				<input type="submit" id="setTitleButton" onclick="setTitle();" style="display: none">
+			</div>
+			<textarea id="input" name="textfeld_01" rows="20" cols="300" wrap="soft" style="max-width: calc(100% - 7px);" autofocus="true" oninput=activateButton() onclick=hideButton() ></textarea>
 		</form>
 			<p id="output"></p>   
 			<p><em><small id="deviceName"></small></em></p>
@@ -32,13 +37,15 @@
          document.getElementById("updateButton").value=window.strSendMemo;
          document.getElementById("previous-button").value=window.strPreviousUpdate;
          document.getElementById("edit-button").value=window.strEditMemo;
-         
-			// handle past and future state updates
+         document.getElementById("cancelButton").value=window.strCancel;
+         document.getElementById("setTitleButton").value=window.strSetTitle;
+
+			// handle past and future state updates and intialize some elements
 			document.getElementById("updateButton").disabled = true; // disable prv UpdateButton until the user changed the textarea
 			window.webxdc.setUpdateListener(function (update) {
 				window.msg = update.payload.msg;
 				window.updateUser = update.payload.updateUser;
-				window.updateTime = update.payload.date;						
+				window.updateTime = update.payload.date;					
 				document.getElementById('input').value = window.msg;
 				window.tmpContent = window.msg;
 				window.tmpUpdateUser = window.updateUser;
@@ -57,9 +64,25 @@
 			document.getElementById("updateButton").value = strSendMemo;
 			window.activated= true;
 			};
+		
+		//show Ok and cancel button for set title	
+		function showButton() {
+			document.getElementById('cancelButton').style="display: yes";
+			document.getElementById('setTitleButton').style="display: yes";			
+		}
+		
+		function hideButton() {
+			document.getElementById('cancelButton').style="display: none";
+			document.getElementById('setTitleButton').style="display: none";
+		}
+		
+		function setTitle() {
+			document.getElementById('title').disabled = false;
+		}
 
 		function showPrv() {
 			document.getElementById('input').disabled = true;
+			document.getElementById('title').disabled = true;								      //deaktivate input field
 			document.getElementById('previous-button').style="display: none"; 				//hide Previous Button
 			document.getElementById('edit-button').style="display: yes; float: right";		//make Edit Button visible			
 			window.msg = document.getElementById("input").value;
@@ -98,7 +121,7 @@
 		window.webxdc.sendUpdate({
 			payload: {
 				name: window.webxdc.selfName,
-					msg, updateUser, prvContent, prvUpdateUser, prvUpdateTime, date,
+					msg, updateUser, prvContent, prvUpdateUser, prvUpdateTime, date, title,
 					},
 					summary: lastUpdate,
 					info,

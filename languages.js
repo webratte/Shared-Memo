@@ -10,6 +10,8 @@ function changeLanguage() {
 			strLast = "Letzte";
 			strThis = "Diese";
 			strUpdate = "Änderung";
+			strCancel = "Abbrechen";
+			strSetTitle = "Titel ändern";
 			//strInfoMessage = "Memo wurde geändert durch";
 			strInfoMessage = "Memo was updated by";
 			}
@@ -22,6 +24,8 @@ function changeLanguage() {
 			strLast = "Dernier";
 			strThis = "Cette";
 			strUpdate = "Modification";
+			strCancel = "Cancel";
+			strSetTitle = "Change Title";
 			//strInfoMessage = "Le mémo a été mis à jour par";
 			strInfoMessage = "Memo was updated by";
 			}
@@ -34,6 +38,8 @@ function changeLanguage() {
 			strLast = "Last";
 			strThis = "This";
 			strUpdate = " Update ";
+			strCancel = "Cancel";
+			strSetTitle = "Change Title";
 			strInfoMessage = "Memo was updated by";
 		}
 };

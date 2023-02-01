@@ -19,7 +19,6 @@
 		<form>
 			<br>
 			<div style="text-align:center;">
-				<input type="button" id="cancelButton" onclick="hideButton();" style="display: none">
 				<input type="text" id="title" value="Memo" onclick="showButton();" oninput="activateTitleButton();" maxlength="12" size="12" style="background-color: #ECDD09; text-align:center;">
 				<input type="button" id="setTitleButton" disabled="true" onclick="setTitle();" style="display: none">
 			</div>
@@ -37,7 +36,6 @@
          document.getElementById("updateButton").value=window.strSendMemo;
          document.getElementById("previous-button").value=window.strPreviousUpdate;
          document.getElementById("edit-button").value=window.strEditMemo;
-         document.getElementById("cancelButton").value=window.strCancel;
          document.getElementById("setTitleButton").value=window.strSetTitle;
 
 			// handle past and future state updates and intialize some elements
@@ -72,7 +70,6 @@
 		
 		//show Ok and cancel button for set title	
 		function showButton() {
-			document.getElementById('cancelButton').style="display: yes";
 			document.getElementById('setTitleButton').style="display: yes";
 			if (document.getElementById('updateButton').disabled === false) {
 				window.UpdateButtonActiv = true;				
@@ -91,7 +88,6 @@
 		
 		//hide button for Set Title		
 		function hideButton() {
-			document.getElementById('cancelButton').style="display: none";
 			document.getElementById('setTitleButton').style="display: none";
 			if (window.UpdateButtonActiv === true) {
 				document.getElementById('updateButton').disabled = false;	
@@ -183,3 +179,4 @@
 			};				
 		</script>
 	</body>
+</html>

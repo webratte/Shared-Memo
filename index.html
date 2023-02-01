@@ -18,15 +18,15 @@
 		<font size="1"> by <a href="mailto:webratte+webxdc@mailbox.org">Webratte </a> Version 1.4beta</font>
 		<form>
 			<br>
-			<input type="submit" id="updateButton" onclick="sendMsg(); return false;">
-			<input type="button" disabled id="previous-button" onclick="showPrv();" style="float: right">
-			<input type="button" id="edit-button" onclick="edit();"  style="display: none";><br>
 			<div style="text-align:center;">
-				<input type="submit" id="cancelButton" onclick="cancel();" style="display: none">
-				<input type="text" id="title" oninput=showButton() style="background-color: #ECDD09">
-				<input type="submit" id="setTitleButton" onclick="setTitle();" style="display: none">
+				<input type="button" id="cancelButton" onclick="hideButton();" style="display: none">
+				<input type="text" id="title" value="Memo" onclick="showButton();" oninput="activateTitleButton();" maxlength="12" size="12" style="background-color: #ECDD09; text-align:center;">
+				<input type="button" id="setTitleButton" disabled="true" onclick="setTitle();" style="display: none">
 			</div>
-			<textarea id="input" name="textfeld_01" rows="20" cols="300" wrap="soft" style="max-width: calc(100% - 7px);" autofocus="true" oninput=activateButton() onclick=hideButton() ></textarea>
+			<input type="button" id="updateButton" onclick="sendMsg(); return false;">
+			<input type="button" disabled id="previous-button" onclick="showPrv();" style="float: right">
+			<input type="button" id="edit-button" onclick="edit();"  style="display: none"><br>
+			<textarea id="input" name="textfeld_01" rows="20" cols="300" wrap="soft" style="max-width: calc(100% - 7px);" autofocus="true" oninput="activateButton();" onclick="hideButton();" ></textarea>
 		</form>
 			<p id="output"></p>   
 			<p><em><small id="deviceName"></small></em></p>
@@ -43,16 +43,21 @@
 			// handle past and future state updates and intialize some elements
 			document.getElementById("updateButton").disabled = true; // disable prv UpdateButton until the user changed the textarea
 			window.webxdc.setUpdateListener(function (update) {
+			
+				window.title = update.payload.title;
 				window.msg = update.payload.msg;
 				window.updateUser = update.payload.updateUser;
 				window.updateTime = update.payload.date;					
 				document.getElementById('input').value = window.msg;
+				document.getElementById('title').value = window.title;
+				window.tmpTitle = window.title;
 				window.tmpContent = window.msg;
 				window.tmpUpdateUser = window.updateUser;
+				window.prvTitle = update.payload.prvTitle;
 				window.prvUpdateUser = update.payload.prvUpdateUser;
 				window.tmpUpdateTime = window.updateTime;
 				window.prvContent = update.payload.prvContent;
-				window.prvUpdateTime = update.payload.prvUpdateTime;
+				window.prvUpdateTime = update.payload.prvUpdateTime;				
 					if (window.prvContent != undefined) {
 						document.getElementById('previous-button').disabled = false; 				//hide Previous Button if there is no previous update
 					};
@@ -62,40 +67,60 @@
 		function activateButton() {
 			document.getElementById("updateButton").disabled = false;
 			document.getElementById("updateButton").value = strSendMemo;
-			window.activated= true;
+			window.activated = true;
 			};
 		
 		//show Ok and cancel button for set title	
 		function showButton() {
 			document.getElementById('cancelButton').style="display: yes";
-			document.getElementById('setTitleButton').style="display: yes";			
-		}
+			document.getElementById('setTitleButton').style="display: yes";
+			if (document.getElementById('updateButton').disabled === false) {
+				window.UpdateButtonActiv = true;				
+			}
+			else {
+				window.UpdateButtonActiv = false;	
+			};
+			document.getElementById('previous-button').disabled = true;				
+			document.getElementById('updateButton').disabled = true;		
+		};
 		
+		//activate the "set Title Button" if the title field was changed		
+		function activateTitleButton() {
+			document.getElementById('setTitleButton').disabled = false;
+		};
+		
+		//hide button for Set Title		
 		function hideButton() {
 			document.getElementById('cancelButton').style="display: none";
 			document.getElementById('setTitleButton').style="display: none";
-		}
-		
+			if (window.UpdateButtonActiv === true) {
+				document.getElementById('updateButton').disabled = false;	
+			}
+		};
 		function setTitle() {
-			document.getElementById('title').disabled = false;
-		}
+			hideButton();
+			sendTitle();
+		};
 
 		function showPrv() {
 			document.getElementById('input').disabled = true;
-			document.getElementById('title').disabled = true;								      //deaktivate input field
+			document.getElementById('title').disabled = true;								      //deaktivate title input field
 			document.getElementById('previous-button').style="display: none"; 				//hide Previous Button
 			document.getElementById('edit-button').style="display: yes; float: right";		//make Edit Button visible			
 			window.msg = document.getElementById("input").value;
 			document.getElementById('output').innerHTML = strThis + " " + strUpdate +": " + window.prvUpdateUser + "<br>" + "<small>" + window.prvUpdateTime;
-			document.getElementById('input').value = window.prvContent;  
+			document.getElementById('input').value = window.prvContent; 
+			document.getElementById('title').value = window.prvTitle; 
 			document.getElementById("updateButton").disabled = true;
 			};	
 
 		function edit() {
 			document.getElementById('input').disabled = false;
+			document.getElementById('title').disabled = false;								      
 			document.getElementById('previous-button').style="display: yes; float: right"; 
 			document.getElementById('edit-button').style="display: none";
 			document.getElementById('input').value = window.msg;
+			document.getElementById('title').value = window.title;
 			document.getElementById('output').innerHTML = strLast + " " + strUpdate +": " + window.updateUser + "<br>" + "<small>" + window.updateTime;
 				if (window.activated === true) {
 					activateButton();		
@@ -106,27 +131,55 @@
 			window.activated = false;
 			document.getElementById("updateButton").disabled = true;
 			document.getElementById("updateButton").value = strWasSent;
-			//keep "summary" in english until Delta Chat API will allow to translate it on receivers side		
-			//lastUpdate = strUpdate + ": " + window.webxdc.selfName;
-			lastUpdate = "Update: " + window.webxdc.selfName;
 			updateUser = window.webxdc.selfName;			
 			window.msg = document.getElementById("input").value;
 			window.date = Date();
+			window.prvTitle = window.tmpTitle;
 			window.prvContent = window.tmpContent;
 			window.prvUpdateUser = window.tmpUpdateUser;
 			window.prvUpdateTime = window.tmpUpdateTime;
-			info = strInfoMessage + " " + window.webxdc.selfName;
+			window.title = document.getElementById("title").value;
+			info = title + " was changed by " + window.webxdc.selfName;
 
 		// send new updates
 		window.webxdc.sendUpdate({
 			payload: {
 				name: window.webxdc.selfName,
-					msg, updateUser, prvContent, prvUpdateUser, prvUpdateTime, date, title,
+					msg, updateUser, prvTitle, prvContent, prvUpdateUser, prvUpdateTime, date, title,
 					},
-					summary: lastUpdate,
+					summary: title,
 					info,
             }, info);
 			};
+	
+		//send changed title
+				function sendTitle() {
+			//memoTitle = window.title;
+			updateUser = window.webxdc.selfName;			
+			window.msg = window.tmpContent;
+		if (window.msg === undefined) {
+			window.msg = "";
+		};		
+			window.date = Date();
+			window.prvContent = window.tmpContent;
+			window.prvUpdateUser = window.tmpUpdateUser;
+			window.prvUpdateTime = window.tmpUpdateTime;
+			window.prvTitle = window.tmpTitle;
+			window.title = document.getElementById("title").value;
+		if (prvTitle === undefined) {
+			prvTitle = "Memo";			
+		}
+			info = "Memo-Title was changed from " + prvTitle + " to " + title + " by"+" " + window.webxdc.selfName;
+			
+		// send new updates
+		window.webxdc.sendUpdate({
+			payload: {
+				name: window.webxdc.selfName,
+					msg, updateUser, prvTitle, prvContent, prvUpdateUser, prvUpdateTime, date, title,
+					},
+					summary: title,
+					info,
+            }, info);
+			};				
 		</script>
 	</body>
-</html>

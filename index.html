@@ -19,13 +19,13 @@
 		<form>
 			<br>
 			<div style="text-align:center;">
-				<input type="text" id="title" value="Memo" onclick="showButton();" oninput="activateTitleButton();" maxlength="12" size="12" style="background-color: #ECDD09; text-align:center;">
+				<input type="text" id="title" value="Memo" onclick="showButton();" oninput="activateTitleButton();" maxlength="14" size="14" style="background-color: #ECDD09; text-align:center;">
 				<input type="button" id="setTitleButton" disabled="true" onclick="setTitle();" style="display: none">
 			</div>
 			<input type="button" id="updateButton" onclick="sendMsg(); return false;">
 			<input type="button" disabled id="previous-button" onclick="showPrv();" style="float: right">
 			<input type="button" id="edit-button" onclick="edit();"  style="display: none"><br>
-			<textarea id="input" name="textfeld_01" rows="20" cols="300" wrap="soft" style="max-width: calc(100% - 7px);" autofocus="true" oninput="activateButton();" onclick="hideButton();" ></textarea>
+			<textarea id="input" name="textfeld_01" rows="20" cols="300" wrap="soft" style="max-width: calc(100% - 7px);" autofocus="true" oninput="activateButton();" onclick="cancelTitle();" ></textarea>
 		</form>
 			<p id="output"></p>   
 			<p><em><small id="deviceName"></small></em></p>
@@ -63,13 +63,14 @@
 			});
 
 		function activateButton() {
-			document.getElementById("updateButton").disabled = false;
-			document.getElementById("updateButton").value = strSendMemo;
+			document.getElementById('updateButton').disabled = false;
+			document.getElementById('updateButton').value = strSendMemo;
 			window.activated = true;
 			};
 		
-		//show Ok and cancel button for set title	
+		//show Ok button for set title	
 		function showButton() {
+			window.title = document.getElementById('title').value;
 			document.getElementById('setTitleButton').style="display: yes";
 			if (document.getElementById('updateButton').disabled === false) {
 				window.UpdateButtonActiv = true;				
@@ -86,13 +87,20 @@
 			document.getElementById('setTitleButton').disabled = false;
 		};
 		
+		function cancelTitle() {
+			document.getElementById('title').value = window.title;
+			hideButton();
+		};
+		
 		//hide button for Set Title		
 		function hideButton() {
+			window.title = document.getElementById('title').value;
 			document.getElementById('setTitleButton').style="display: none";
 			if (window.UpdateButtonActiv === true) {
 				document.getElementById('updateButton').disabled = false;	
 			}
 		};
+		
 		function setTitle() {
 			hideButton();
 			sendTitle();
@@ -107,7 +115,7 @@
 			document.getElementById('output').innerHTML = strThis + " " + strUpdate +": " + window.prvUpdateUser + "<br>" + "<small>" + window.prvUpdateTime;
 			document.getElementById('input').value = window.prvContent; 
 			document.getElementById('title').value = window.prvTitle; 
-			document.getElementById("updateButton").disabled = true;
+			document.getElementById('updateButton').disabled = true;
 			};	
 
 		function edit() {
@@ -125,16 +133,16 @@
 		
 		function sendMsg() {
 			window.activated = false;
-			document.getElementById("updateButton").disabled = true;
-			document.getElementById("updateButton").value = strWasSent;
+			document.getElementById('updateButton').disabled = true;
+			document.getElementById('updateButton').value = strWasSent;
 			updateUser = window.webxdc.selfName;			
-			window.msg = document.getElementById("input").value;
+			window.msg = document.getElementById('input').value;
 			window.date = Date();
 			window.prvTitle = window.tmpTitle;
 			window.prvContent = window.tmpContent;
 			window.prvUpdateUser = window.tmpUpdateUser;
 			window.prvUpdateTime = window.tmpUpdateTime;
-			window.title = document.getElementById("title").value;
+			window.title = document.getElementById('title').value;
 			info = title + " was changed by " + window.webxdc.selfName;
 
 		// send new updates
@@ -150,7 +158,6 @@
 	
 		//send changed title
 				function sendTitle() {
-			//memoTitle = window.title;
 			updateUser = window.webxdc.selfName;			
 			window.msg = window.tmpContent;
 		if (window.msg === undefined) {
@@ -161,7 +168,7 @@
 			window.prvUpdateUser = window.tmpUpdateUser;
 			window.prvUpdateTime = window.tmpUpdateTime;
 			window.prvTitle = window.tmpTitle;
-			window.title = document.getElementById("title").value;
+			//window.title = document.getElementById("title").value;
 		if (prvTitle === undefined) {
 			prvTitle = "Memo";			
 		}

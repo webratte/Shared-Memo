@@ -41,7 +41,6 @@
 			// handle past and future state updates and intialize some elements
 			document.getElementById("updateButton").disabled = true; // disable prv UpdateButton until the user changed the textarea
 			window.webxdc.setUpdateListener(function (update) {
-			
 				window.title = update.payload.title;
 				window.msg = update.payload.msg;
 				window.updateUser = update.payload.updateUser;
@@ -143,7 +142,8 @@
 			window.prvUpdateUser = window.tmpUpdateUser;
 			window.prvUpdateTime = window.tmpUpdateTime;
 			window.title = document.getElementById('title').value;
-			info = "shared Memo: " + "\"" + title + "\"" + " was changed by " + window.webxdc.selfName;
+			info = "Shared Memo: " + "\"" + title + "\"" + " was changed by " + window.webxdc.selfName;
+			lastChange = "Update: " + window.webxdc.selfName;
 
 		// send new updates
 		window.webxdc.sendUpdate({
@@ -151,8 +151,9 @@
 				name: window.webxdc.selfName,
 					msg, updateUser, prvTitle, prvContent, prvUpdateUser, prvUpdateTime, date, title,
 					},
-					summary: title,
+					summary: lastChange,
 					info,
+					document: title,
             }, info);
 			};
 	
@@ -168,11 +169,11 @@
 			window.prvUpdateUser = window.tmpUpdateUser;
 			window.prvUpdateTime = window.tmpUpdateTime;
 			window.prvTitle = window.tmpTitle;
-			//window.title = document.getElementById("title").value;
 		if (prvTitle === undefined) {
 			prvTitle = "Memo";			
 		}
-			info = "shared Memo was renamed from " + "\"" + prvTitle + "\"" + " to " + "\"" + title + "\"" + " by"+" " + window.webxdc.selfName;
+			info = "Shared Memo was renamed from " + "\"" + prvTitle + "\"" + " to " + "\"" + title + "\"" + " by"+" " + window.webxdc.selfName;
+			lastChange = "Update: " + window.webxdc.selfName;
 			
 		// send new updates
 		window.webxdc.sendUpdate({
@@ -180,8 +181,9 @@
 				name: window.webxdc.selfName,
 					msg, updateUser, prvTitle, prvContent, prvUpdateUser, prvUpdateTime, date, title,
 					},
-					summary: title,
+					summary: lastChange,
 					info,
+					document: title,
             }, info);
 			};				
 		</script>

@@ -143,7 +143,7 @@
 			window.prvUpdateUser = window.tmpUpdateUser;
 			window.prvUpdateTime = window.tmpUpdateTime;
 			window.title = document.getElementById('title').value;
-			info = title + " was changed by " + window.webxdc.selfName;
+			info = "shared Memo: " + "\"" + title + "\"" + " was changed by " + window.webxdc.selfName;
 
 		// send new updates
 		window.webxdc.sendUpdate({
@@ -172,7 +172,7 @@
 		if (prvTitle === undefined) {
 			prvTitle = "Memo";			
 		}
-			info = "Memo-Title was changed from " + prvTitle + " to " + title + " by"+" " + window.webxdc.selfName;
+			info = "shared Memo was renamed from " + "\"" + prvTitle + "\"" + " to " + "\"" + title + "\"" + " by"+" " + window.webxdc.selfName;
 			
 		// send new updates
 		window.webxdc.sendUpdate({

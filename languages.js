@@ -22,8 +22,8 @@ function changeLanguage() {
 			strLast = "Dernier";
 			strThis = "Cette";
 			strUpdate = "Modification";
-			strCancel = "Cancel";
-			strSetTitle = "Change Title";
+			strCancel = "Annuler";
+			strSetTitle = "Changer le titre";
 			}
 		else {
 			//fallback

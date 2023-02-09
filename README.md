@@ -6,6 +6,8 @@ Every group member can read and change this memo.
 Use it e.g. to keep all relevant dates in one place if you plan a meeting with your friends ;-)
 
 Or simply share this App into your "saved messages" chat. You can add a shortcut to your homesreen and you have your memos on all devices where you run Delta Chat.
+For better overview if you use more then one instance, you can set a title for every instance since version 1.4.
+This title will also used for the name of the homescreen shortcuts.
 
 <img alt="Screenshot" src="docs/images/Memo-Screenshot-v1_2_1.jpg" width="298" />
 

@@ -15,13 +15,17 @@
 	</head>
 	<body>
 		<font size="6"> Shared Memo </font>
-		<font size="1"> by <a href="mailto:webratte+webxdc@mailbox.org">Webratte </a> Version 1.3</font>
+		<font size="1"> by <a href="mailto:webratte+webxdc@mailbox.org">Webratte </a> Version 1.4</font>
 		<form>
 			<br>
-			<input type="submit" id="updateButton" onclick="sendMsg(); return false;">
+			<div style="text-align:center;">
+				<input type="text" id="title" value="Memo" onclick="showButton();" oninput="activateTitleButton();" maxlength="14" size="14" style="background-color: #ECDD09; text-align:center;">
+				<input type="button" id="setTitleButton" disabled="true" onclick="setTitle();" style="display: none">
+			</div>
+			<input type="button" id="updateButton" onclick="sendMsg(); return false;">
 			<input type="button" disabled id="previous-button" onclick="showPrv();" style="float: right">
-			<input type="button" id="edit-button" onclick="edit();"  style="display: none";><br><br>
-			<textarea id="input" name="textfeld_01" rows="20" cols="300" wrap="soft" data-preview="#preview" data-provide = "markdown" style="max-width: calc(100% - 7px);" autofocus="true" oninput=activateButton() ></textarea>
+			<input type="button" id="edit-button" onclick="edit();"  style="display: none"><br>
+			<textarea id="input" name="textfeld_01" rows="20" cols="300" wrap="soft" style="max-width: calc(100% - 7px);" autofocus="true" oninput="activateButton();" onclick="cancelTitle();" ></textarea>
 		</form>
 			<p id="output"></p>   
 			<p><em><small id="deviceName"></small></em></p>
@@ -32,20 +36,25 @@
          document.getElementById("updateButton").value=window.strSendMemo;
          document.getElementById("previous-button").value=window.strPreviousUpdate;
          document.getElementById("edit-button").value=window.strEditMemo;
-         
-			// handle past and future state updates
+         document.getElementById("setTitleButton").value=window.strSetTitle;
+
+			// handle past and future state updates and intialize some elements
 			document.getElementById("updateButton").disabled = true; // disable prv UpdateButton until the user changed the textarea
 			window.webxdc.setUpdateListener(function (update) {
+				window.title = update.payload.title;
 				window.msg = update.payload.msg;
 				window.updateUser = update.payload.updateUser;
-				window.updateTime = update.payload.date;						
+				window.updateTime = update.payload.date;					
 				document.getElementById('input').value = window.msg;
+				document.getElementById('title').value = window.title;
+				window.tmpTitle = window.title;
 				window.tmpContent = window.msg;
 				window.tmpUpdateUser = window.updateUser;
+				window.prvTitle = update.payload.prvTitle;
 				window.prvUpdateUser = update.payload.prvUpdateUser;
 				window.tmpUpdateTime = window.updateTime;
 				window.prvContent = update.payload.prvContent;
-				window.prvUpdateTime = update.payload.prvUpdateTime;
+				window.prvUpdateTime = update.payload.prvUpdateTime;				
 					if (window.prvContent != undefined) {
 						document.getElementById('previous-button').disabled = false; 				//hide Previous Button if there is no previous update
 					};
@@ -53,26 +62,70 @@
 			});
 
 		function activateButton() {
-			document.getElementById("updateButton").disabled = false;
-			document.getElementById("updateButton").value = strSendMemo;
-			window.activated= true;
+			document.getElementById('updateButton').disabled = false;
+			document.getElementById('updateButton').value = strSendMemo;
+			window.activated = true;
 			};
+		
+		//show Ok button for set title	
+		function showButton() {
+			window.title = document.getElementById('title').value;
+			document.getElementById('setTitleButton').style="display: yes";
+			if (document.getElementById('updateButton').disabled === false) {
+				window.UpdateButtonActiv = true;				
+			}
+			else {
+				window.UpdateButtonActiv = false;	
+			};
+			document.getElementById('previous-button').disabled = true;				
+			document.getElementById('updateButton').disabled = true;		
+		};
+		
+		//activate the "set Title Button" if the title field was changed		
+		function activateTitleButton() {
+			document.getElementById('setTitleButton').disabled = false;
+		};
+		
+		function cancelTitle() {
+			if (document.getElementById('title').value != "Memo") {
+				document.getElementById('title').value = window.title;
+			}						
+			hideButton();
+		};
+		
+		//hide button for Set Title		
+		function hideButton() {
+			window.title = document.getElementById('title').value;
+			document.getElementById('setTitleButton').style="display: none";
+			if (window.UpdateButtonActiv === true) {
+				document.getElementById('updateButton').disabled = false;	
+			}
+		};
+		
+		function setTitle() {
+			hideButton();
+			sendTitle();
+		};
 
 		function showPrv() {
 			document.getElementById('input').disabled = true;
+			document.getElementById('title').disabled = true;								      //deaktivate title input field
 			document.getElementById('previous-button').style="display: none"; 				//hide Previous Button
 			document.getElementById('edit-button').style="display: yes; float: right";		//make Edit Button visible			
 			window.msg = document.getElementById("input").value;
 			document.getElementById('output').innerHTML = strThis + " " + strUpdate +": " + window.prvUpdateUser + "<br>" + "<small>" + window.prvUpdateTime;
-			document.getElementById('input').value = window.prvContent;  
-			document.getElementById("updateButton").disabled = true;
+			document.getElementById('input').value = window.prvContent; 
+			document.getElementById('title').value = window.prvTitle; 
+			document.getElementById('updateButton').disabled = true;
 			};	
 
 		function edit() {
 			document.getElementById('input').disabled = false;
+			document.getElementById('title').disabled = false;								      
 			document.getElementById('previous-button').style="display: yes; float: right"; 
 			document.getElementById('edit-button').style="display: none";
 			document.getElementById('input').value = window.msg;
+			document.getElementById('title').value = window.title;
 			document.getElementById('output').innerHTML = strLast + " " + strUpdate +": " + window.updateUser + "<br>" + "<small>" + window.updateTime;
 				if (window.activated === true) {
 					activateButton();		
@@ -81,29 +134,61 @@
 		
 		function sendMsg() {
 			window.activated = false;
-			document.getElementById("updateButton").disabled = true;
-			document.getElementById("updateButton").value = strWasSent;
-			//keep "summary" in english until Delta Chat API will allow to translate it on receivers side		
-			//lastUpdate = strUpdate + ": " + window.webxdc.selfName;
-			lastUpdate = "Update: " + window.webxdc.selfName;
+			document.getElementById('updateButton').disabled = true;
+			document.getElementById('updateButton').value = strWasSent;
 			updateUser = window.webxdc.selfName;			
-			window.msg = document.getElementById("input").value;
+			window.msg = document.getElementById('input').value;
 			window.date = Date();
+			window.prvTitle = window.tmpTitle;
 			window.prvContent = window.tmpContent;
 			window.prvUpdateUser = window.tmpUpdateUser;
 			window.prvUpdateTime = window.tmpUpdateTime;
-			info = strInfoMessage + " " + window.webxdc.selfName;
+			window.title = document.getElementById('title').value;
+			info = "Shared Memo: " + "\"" + title + "\"" + " was changed by " + window.webxdc.selfName;
+			lastChange = "Update: " + window.webxdc.selfName;
 
 		// send new updates
 		window.webxdc.sendUpdate({
 			payload: {
 				name: window.webxdc.selfName,
-					msg, updateUser, prvContent, prvUpdateUser, prvUpdateTime, date,
+					msg, updateUser, prvTitle, prvContent, prvUpdateUser, prvUpdateTime, date, title,
 					},
-					summary: lastUpdate,
+					summary: lastChange,
 					info,
+					document: title,
             }, info);
 			};
+	
+		//send changed title
+				function sendTitle() {
+			updateUser = window.webxdc.selfName;			
+			window.msg = window.tmpContent;
+		if (window.msg === undefined) {
+			window.msg = "";
+		};		
+			window.date = Date();
+			window.prvContent = window.tmpContent;
+			window.prvUpdateUser = window.tmpUpdateUser;
+			window.prvUpdateTime = window.tmpUpdateTime;
+			window.prvTitle = window.tmpTitle;
+			//window.title = document.getElementById("title").value;
+		if (prvTitle === undefined) {
+			prvTitle = "Memo";			
+		}
+			info = "Shared Memo was renamed from " + "\"" + prvTitle + "\"" + " to " + "\"" + title + "\"" + " by"+" " + window.webxdc.selfName;
+			lastChange = "Update: " + window.webxdc.selfName;
+			
+		// send new updates
+		window.webxdc.sendUpdate({
+			payload: {
+				name: window.webxdc.selfName,
+					msg, updateUser, prvTitle, prvContent, prvUpdateUser, prvUpdateTime, date, title,
+					},
+					summary: lastChange,
+					info,
+					document: title,
+            }, info);
+			};				
 		</script>
 	</body>
 </html>

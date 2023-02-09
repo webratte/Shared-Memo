@@ -10,8 +10,8 @@ function changeLanguage() {
 			strLast = "Letzte";
 			strThis = "Diese";
 			strUpdate = "Änderung";
-			//strInfoMessage = "Memo wurde geändert durch";
-			strInfoMessage = "Memo was updated by";
+			strCancel = "Abbrechen";
+			strSetTitle = "Titel ändern";
 			}
 		else if (browserLang == "fr") {
 			//french
@@ -22,8 +22,8 @@ function changeLanguage() {
 			strLast = "Dernier";
 			strThis = "Cette";
 			strUpdate = "Modification";
-			//strInfoMessage = "Le mémo a été mis à jour par";
-			strInfoMessage = "Memo was updated by";
+			strCancel = "Annuler";
+			strSetTitle = "Changer le titre";
 			}
 		else {
 			//fallback
@@ -34,6 +34,7 @@ function changeLanguage() {
 			strLast = "Last";
 			strThis = "This";
 			strUpdate = " Update ";
-			strInfoMessage = "Memo was updated by";
+			strCancel = "Cancel";
+			strSetTitle = "Change Title";
 		}
 };

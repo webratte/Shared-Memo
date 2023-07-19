@@ -6,6 +6,7 @@
 		<meta name="viewport" content="width=device-width"/>
 		<script src="webxdc.js"></script>
 		<script src="languages.js"></script>
+		<script src="storage.js"></script>
 		<style type="text/css">
 			body {
 				font-family: Helvetica, Arial, sans-serif;
@@ -37,10 +38,21 @@
          document.getElementById("previous-button").value=window.strPreviousUpdate;
          document.getElementById("edit-button").value=window.strEditMemo;
          document.getElementById("setTitleButton").value=window.strSetTitle;
-
+         
 			// handle past and future state updates and intialize some elements
 			document.getElementById("updateButton").disabled = true; // disable prv UpdateButton until the user changed the textarea
 			window.webxdc.setUpdateListener(function (update) {
+			readUnixtime(); // Read last sent time from locale storage to compare with the time of the incoming message	
+		  if (window.storedSentTime === null) {
+		  		window.storedSentTime = 0;
+		  }		
+				window.CurrentTime = update.payload.CurrentTime;
+   		if (window.CurrentTime === undefined) {
+       	         window.CurrentTime = 1;
+    		 }
+
+			if (window.CurrentTime >= window.storedSentTime) {   // if incoming message newer then the already stored, import new message
+				storeIncomingTime();
 				window.title = update.payload.title;
 				window.msg = update.payload.msg;
 				window.updateUser = update.payload.updateUser;
@@ -59,6 +71,7 @@
 						document.getElementById('previous-button').disabled = false; 				//hide Previous Button if there is no previous update
 					};
 				document.getElementById('output').innerHTML = strLast + " " + strUpdate +": " + window.updateUser + "<br>" + "<small>" + window.updateTime;
+			}   
 			});
 
 		function activateButton() {
@@ -133,6 +146,7 @@
 			};	
 		
 		function sendMsg() {
+			storeSentTime();	// Store Unixtime for Sent in locale storage
 			window.activated = false;
 			document.getElementById('updateButton').disabled = true;
 			document.getElementById('updateButton').value = strWasSent;
@@ -151,7 +165,7 @@
 		window.webxdc.sendUpdate({
 			payload: {
 				name: window.webxdc.selfName,
-					msg, updateUser, prvTitle, prvContent, prvUpdateUser, prvUpdateTime, date, title,
+					msg, updateUser, prvTitle, prvContent, prvUpdateUser, prvUpdateTime, date, title, CurrentTime,
 					},
 					summary: lastChange,
 					info,
@@ -171,7 +185,7 @@
 			window.prvUpdateUser = window.tmpUpdateUser;
 			window.prvUpdateTime = window.tmpUpdateTime;
 			window.prvTitle = window.tmpTitle;
-			//window.title = document.getElementById("title").value;
+			
 		if (prvTitle === undefined) {
 			prvTitle = "Memo";			
 		}
@@ -182,7 +196,7 @@
 		window.webxdc.sendUpdate({
 			payload: {
 				name: window.webxdc.selfName,
-					msg, updateUser, prvTitle, prvContent, prvUpdateUser, prvUpdateTime, date, title,
+					msg, updateUser, prvTitle, prvContent, prvUpdateUser, prvUpdateTime, date, title, CurrentTime,
 					},
 					summary: lastChange,
 					info,

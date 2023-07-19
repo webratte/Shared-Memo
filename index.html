@@ -51,7 +51,7 @@
        	         window.CurrentTime = 1;
     		 }
 
-			if (window.CurrentTime >= window.storedSentTime) {   // if incoming message newer then the already stored, import new message
+			if (window.CurrentTime >= window.storedSentTime) {   // if incoming message newer or the same age then the already stored, import new message
 				storeIncomingTime();
 				window.title = update.payload.title;
 				window.msg = update.payload.msg;
@@ -185,6 +185,7 @@
 			window.prvUpdateUser = window.tmpUpdateUser;
 			window.prvUpdateTime = window.tmpUpdateTime;
 			window.prvTitle = window.tmpTitle;
+			window.title = document.getElementById("title").value;
 			
 		if (prvTitle === undefined) {
 			prvTitle = "Memo";			

@@ -175,6 +175,7 @@
 	
 		//send changed title
 				function sendTitle() {
+				storeSentTime();	// Store Unixtime for Sent in locale storage
 			updateUser = window.webxdc.selfName;			
 			window.msg = window.tmpContent;
 		if (window.msg === undefined) {

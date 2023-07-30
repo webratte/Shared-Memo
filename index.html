@@ -42,7 +42,17 @@
           // handle past and future state updates and intialize some elements
           document.getElementById("updateButton").disabled = true; // disable prv UpdateButton until the user changed the textarea
           window.webxdc.setUpdateListener(function (update) {
-          readUnixtime(); // Read last sent time from locale storage to compare with the time of the incoming message	
+          readUnixtime(); // Read last sent time from locale storage to compare with the time of the incoming message
+                    
+ //begin test
+
+          window.repairMessage = false;          
+          window.summarySent = update.summary;
+          storeSentSummary();
+          window.timer = setTimeout(timer, 3000);	
+
+//end test                   
+                                        	
                if (window.storedSentTime === null) {
                     window.storedSentTime = 0;
                };		
@@ -50,11 +60,15 @@
                if (window.CurrentTime === undefined) {
                     window.CurrentTime = 1;
                };
+               
+              
+               
                if (window.CurrentTime >= window.storedSentTime) {   // if incoming message newer or the same age then the already stored, import new message                            
                     storeIncomingTime();
                     window.title = update.payload.title;
                     window.msg = update.payload.msg;
                     window.updateUser = update.payload.updateUser;
+                    storeSentUser();                                       // store the user who sent the last valid update
                     window.updateTime = update.payload.date;					
                     document.getElementById('input').value = window.msg;
                     document.getElementById('title').value = window.title;
@@ -157,8 +171,15 @@ function sendMsg() {
      window.prvUpdateUser = window.tmpUpdateUser;
      window.prvUpdateTime = window.tmpUpdateTime;
      window.title = document.getElementById('title').value;
-     info = "Shared Memo: " + "\"" + title + "\"" + " was changed by " + window.webxdc.selfName;
-     lastChange = "Update: " + window.webxdc.selfName;
+     
+     if (window.repairMessage === true) {
+          info = "There was a conflict between two or more message updates. The last update of the Shared Memo " + "\"" + title + "\"" + " was sent by " + window.lastUser;
+          lastChange = "Update: " + window.lastUser;     	
+     }
+          else {
+               info = "Shared Memo: " + "\"" + title + "\"" + " was changed by " + window.webxdc.selfName;
+               lastChange = "Update: " + window.webxdc.selfName;
+          };
 
      // send new updates
      window.webxdc.sendUpdate({

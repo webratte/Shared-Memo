@@ -2,12 +2,12 @@
 <html>
      <head>
           <title>Shared Memo</title>
-          <meta charset="utf-8"/>
-          <meta name="viewport" content="width=device-width"/>
-          <script src="webxdc.js"></script>
-          <script src="languages.js"></script>
-          <script src="storage.js"></script>
-     <style type="text/css">
+          <meta charset='utf-8'/>
+          <meta name='viewport' content='width=device-width'/>
+          <script src='webxdc.js'></script>
+          <script src='languages.js'></script>
+          <script src='storage.js'></script>
+     <style type='text/css'>
           body {
                font-family: Helvetica, Arial, sans-serif;
                background-color: #ECDD09;
@@ -15,32 +15,30 @@
      </style>
      </head>
      <body>
-          <font size="6"> Shared Memo </font>
-          <font size="1"> by <a href="mailto:webratte+webxdc@mailbox.org">Webratte </a> Version 1.5 beta 4</font>
+          <font size='6'> Shared Memo </font>
+          <font size='1'> by <a href="mailto:webratte+webxdc@mailbox.org">Webratte </a> Version 1.5 beta 4</font>
           <form>
                <br>
-               <div style="text-align:center;">
-                    <input type="text" id="title" value="Memo" onclick="showButton();" oninput="activateTitleButton();" maxlength="14" size="14" style="background-color: #ECDD09; text-align:center;">
-                    <input type="button" id="setTitleButton" disabled="true" onclick="setTitle();" style="display: none">
+               <div style='text-align:center;'>
+                    <input type='text' id='title' value='Memo' onclick='showButton();' oninput='activateTitleButton();' maxlength='14' size='14' style='background-color: #ECDD09; text-align:center;'>
+                    <input type='button' id='setTitleButton' disabled='true' onclick='setTitle();' style='display: none'>
                </div>
-               <input type="button" id="updateButton" onclick="sendMsg(); return false;">
-               <input type="button" disabled id="previous-button" onclick="showPrv();" style="float: right">
-               <input type="button" id="edit-button" onclick="edit();"  style="display: none"><br>
-               <textarea id="input" name="textfeld_01" rows="20" cols="300" wrap="soft" style="max-width: calc(100% - 7px);" autofocus="true" oninput="activateButton();" onclick="cancelTitle();" ></textarea>
+               <input type='button' id='updateButton' onclick='sendMsg(); return false;'>
+               <input type='button' disabled id='previous-button' onclick='showPrv();' style='float: right'>
+               <input type='button' id='edit-button' onclick='edit();'  style='display: none'><br>
+               <textarea id='input' name='textfeld_01' rows='20' cols='300' wrap='soft' style='max-width: calc(100% - 7px)' autofocus='true' oninput='activateButton();' onclick='cancelTitle();' ></textarea>
+               <textarea id='draftinfo' disabled name='textfeld_02' rows='5' cols='300'  style='display: none;'></textarea>
+               <div style='text-align:center;'>               
+                    <input type='button' id='draft-button' onclick='closeInfo();' value="     OK     "  style='display: none'><br>
+               </div>         
           </form>
-          <p id="output"></p>   
-          <p><em><small id="deviceName"></small></em></p>
-		
+          <p id='output'></p>   
+          <p><em><small id='deviceName'></small></em></p>
           <script>
-          //set user language
-          changeLanguage();
-          document.getElementById("updateButton").value=window.strSendMemo;
-          document.getElementById("previous-button").value=window.strPreviousUpdate;
-          document.getElementById("edit-button").value=window.strEditMemo;
-          document.getElementById("setTitleButton").value=window.strSetTitle;
-         
+          changeLanguage(); 
+                 
           // handle past and future state updates and intialize some elements
-          document.getElementById("updateButton").disabled = true; // disable prv UpdateButton until the user changed the textarea
+          document.getElementById('updateButton').disabled = true; // disable prv UpdateButton until the user changed the textarea
           window.webxdc.setUpdateListener(function (update) {
           readUnixtime(); // Read last sent time from locale storage to compare with the time of the incoming message                 
                                         	
@@ -53,12 +51,20 @@
                };
               
                if (window.CurrentTime >= window.storedSentTime) {   // if incoming message newer or the same age then the already stored, import new message                            
+           
+           // create draft if needed    
+                    window.msg = update.payload.msg;                
+                    if (window.activated === true) {                       
+                         setDraft();                          
+                    }
+                    else {
+                         document.getElementById('input').value = window.msg;
+                    };
+                                   
                     storeIncomingTime();
                     window.title = update.payload.title;
-                    window.msg = update.payload.msg;
                     window.updateUser = update.payload.updateUser;
                     window.updateTime = update.payload.date;					
-                    document.getElementById('input').value = window.msg;
                     document.getElementById('title').value = window.title;
                     window.tmpTitle = window.title;
                     window.tmpContent = window.msg;
@@ -71,7 +77,7 @@
                     if (window.prvContent != undefined) {
                          document.getElementById('previous-button').disabled = false; 	//hide Previous Button if there is no previous update
                     };
-                    document.getElementById('output').innerHTML = strLast + " " + strUpdate +": " + window.updateUser + "<br>" + "<small>" + window.updateTime;
+                    document.getElementById('output').innerHTML = strLast + ' ' + strUpdate +': ' + window.updateUser + '<br>' + '<small>' + window.updateTime;
                }
           });
 
@@ -84,7 +90,7 @@ function activateButton() {
 //show Ok button for set title	
 function showButton() {
      window.title = document.getElementById('title').value;
-     document.getElementById('setTitleButton').style="display: yes";
+     document.getElementById('setTitleButton').style='display: yes';
      if (document.getElementById('updateButton').disabled === false) {
           window.UpdateButtonActiv = true;				
      }
@@ -95,7 +101,7 @@ function showButton() {
      document.getElementById('updateButton').disabled = true;		
 };
 		
-//activate the "set Title Button" if the title field was changed		
+//activate the 'set Title Button' if the title field was changed		
 function activateTitleButton() {
      document.getElementById('setTitleButton').disabled = false;
 };
@@ -110,7 +116,8 @@ function cancelTitle() {
 //hide button for Set Title		
 function hideButton() {
      window.title = document.getElementById('title').value;
-     document.getElementById('setTitleButton').style="display: none";
+     document.getElementById('setTitleButton').style='display: none';
+     window.activated = false;
      if (window.UpdateButtonActiv === true) {
           document.getElementById('updateButton').disabled = false;	
      }
@@ -119,15 +126,16 @@ function hideButton() {
 function setTitle() {
      hideButton();
      sendTitle();
+
 };
 
 function showPrv() {
      document.getElementById('input').disabled = true;
      document.getElementById('title').disabled = true;								      //deaktivate title input field
-     document.getElementById('previous-button').style="display: none"; 				//hide Previous Button
-     document.getElementById('edit-button').style="display: yes; float: right";		//make Edit Button visible			
-     window.msg = document.getElementById("input").value;
-     document.getElementById('output').innerHTML = strThis + " " + strUpdate +": " + window.prvUpdateUser + "<br>" + "<small>" + window.prvUpdateTime;
+     document.getElementById('previous-button').style='display: none'; 				//hide Previous Button
+     document.getElementById('edit-button').style='display: yes; float: right';		//make Edit Button visible			
+     window.msg = document.getElementById('input').value;
+     document.getElementById('output').innerHTML = strThis + ' ' + strUpdate +': ' + window.prvUpdateUser + '<br>' + '<small>' + window.prvUpdateTime;
      document.getElementById('input').value = window.prvContent; 
      document.getElementById('title').value = window.prvTitle; 
      document.getElementById('updateButton').disabled = true;
@@ -136,11 +144,11 @@ function showPrv() {
 function edit() {
      document.getElementById('input').disabled = false;
      document.getElementById('title').disabled = false;								      
-     document.getElementById('previous-button').style="display: yes; float: right"; 
-     document.getElementById('edit-button').style="display: none";
+     document.getElementById('previous-button').style='display: yes; float: right'; 
+     document.getElementById('edit-button').style='display: none';
      document.getElementById('input').value = window.msg;
      document.getElementById('title').value = window.title;
-     document.getElementById('output').innerHTML = strLast + " " + strUpdate +": " + window.updateUser + "<br>" + "<small>" + window.updateTime;
+     document.getElementById('output').innerHTML = strLast + ' ' + strUpdate +': ' + window.updateUser + '<br>' + '<small>' + window.updateTime;
      if (window.activated === true) {
           activateButton();		
      }			
@@ -160,7 +168,7 @@ function sendMsg() {
      window.prvUpdateTime = window.tmpUpdateTime;
      window.title = document.getElementById('title').value;
      
-               info = "Shared Memo: " + "\"" + title + "\"" + " was changed by " + window.webxdc.selfName;
+               info = "Shared Memo: " + '\'' + title + '\'' + " was changed by " + window.webxdc.selfName;
                lastChange = "Update: " + window.webxdc.selfName;
 
      // send new updates
@@ -180,18 +188,18 @@ function sendTitle() {
      updateUser = window.webxdc.selfName;			
      window.msg = window.tmpContent;
      if (window.msg === undefined) {
-          window.msg = "";
+          window.msg = '';
      };		
      window.date = Date();
      window.prvContent = window.tmpContent;
      window.prvUpdateUser = window.tmpUpdateUser;
      window.prvUpdateTime = window.tmpUpdateTime;
      window.prvTitle = window.tmpTitle;
-     window.title = document.getElementById("title").value;
+     window.title = document.getElementById('title').value;
      if (prvTitle === undefined) {
           prvTitle = "Memo";			
      }
-     info = "Shared Memo was renamed from " + "\"" + prvTitle + "\"" + " to " + "\"" + title + "\"" + " by"+" " + window.webxdc.selfName;
+     info = "Shared Memo was renamed from " + '\'' + prvTitle + '\'' + " to " + '\'' + title + '\'' + " by"+" " + window.webxdc.selfName;
      lastChange = "Update: " + window.webxdc.selfName;
 			
      // send new updates

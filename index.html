@@ -27,9 +27,9 @@
                <input type='button' disabled id='previous-button' onclick='showPrv();' style='float: right'>
                <input type='button' id='edit-button' onclick='edit();'  style='display: none'><br>
                <textarea id='input' name='textfeld_01' rows='20' cols='300' wrap='soft' style='max-width: calc(100% - 7px)' autofocus='true' oninput='activateButton();' onclick='cancelTitle();' ></textarea>
-               <textarea id='draftinfo' disabled name='textfeld_02' rows='5' cols='300'  style='display: none;'></textarea>
+               <textarea id='draftinfo' disabled name='textfeld_02' rows='9' cols='300'  style='display: none;'></textarea>
                <div style='text-align:center;'>               
-                    <input type='button' id='draft-button' onclick='closeInfo();' value="     OK     "  style='display: none'><br>
+                    <br><input type='button' id='draft-button' onclick='closeInfo();' style='display: none'><br>
                </div>         
           </form>
           <p id='output'></p>   
@@ -51,17 +51,9 @@
                };
               
                if (window.CurrentTime >= window.storedSentTime) {   // if incoming message newer or the same age then the already stored, import new message                            
-           
-           // create draft if needed    
-                    window.msg = update.payload.msg;                
-                    if (window.activated === true) {                       
-                         setDraft();                          
-                    }
-                    else {
-                         document.getElementById('input').value = window.msg;
-                    };
                                    
                     storeIncomingTime();
+                    window.msg = update.payload.msg;
                     window.title = update.payload.title;
                     window.updateUser = update.payload.updateUser;
                     window.updateTime = update.payload.date;					
@@ -78,7 +70,16 @@
                          document.getElementById('previous-button').disabled = false; 	//hide Previous Button if there is no previous update
                     };
                     document.getElementById('output').innerHTML = strLast + ' ' + strUpdate +': ' + window.updateUser + '<br>' + '<small>' + window.updateTime;
-               }
+               }                    
+                    
+                    // create draft if needed    
+                    changeLanguage();                 
+                    if (window.activated === true) {                       
+                         setDraft();                          
+                    }
+                    else {
+                         document.getElementById('input').value = window.msg;
+                    };
           });
 
 function activateButton() {

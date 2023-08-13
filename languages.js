@@ -51,10 +51,10 @@ function changeLanguage() {
                strMessageDraft = "\nA change by " + window.updateUser +" just arrived.\nYour text has been temporarily saved as a draft.\n\n!! ATTENTION !!\nIt will be lost when the app is closed if the memo is not sent."
                strDraftButton = "  Show draft  ";
           }
-     document.getElementById("updateButton").value=window.strSendMemo;
-     document.getElementById("previous-button").value=window.strPreviousUpdate;
-     document.getElementById("edit-button").value=window.strEditMemo;
-     document.getElementById("setTitleButton").value=window.strSetTitle;
+     document.getElementById('updateButton').value=window.strSendMemo;
+     document.getElementById('previous-button').value=window.strPreviousUpdate;
+     document.getElementById('edit-button').value=window.strEditMemo;
+     document.getElementById('setTitleButton').value=window.strSetTitle;
      document.getElementById('draftinfo').value=window.strMessageDraft;
      document.getElementById('draft-button').value=window.strDraftButton;
 };

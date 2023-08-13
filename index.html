@@ -16,14 +16,14 @@
      </head>
      <body>
           <font size='6'> Shared Memo </font>
-          <font size='1'> by <a href="mailto:webratte+webxdc@mailbox.org">Webratte </a> Version 1.5</font>
+          <font size='1'> by <a href="mailto:webratte+webxdc@mailbox.org">Webratte </a> Version 2.0 beta 1</font>
           <form>
                <br>
                <div style='text-align:center;'>
                     <input type='text' id='title' value='Memo' onclick='showButton();' oninput='activateTitleButton();' maxlength='14' size='14' style='background-color: #ECDD09; text-align:center;'>
                     <input type='button' id='setTitleButton' disabled='true' onclick='setTitle();' style='display: none'>
                </div>
-               <input type='button' id='updateButton' onclick='sendMsg(); return false;'>
+               <input type='button' id='updateButton' onclick='sendMsg();'>
                <input type='button' disabled id='previous-button' onclick='showPrv();' style='float: right'>
                <input type='button' id='edit-button' onclick='edit();'  style='display: none'><br>
                <textarea id='input' name='textfeld_01' rows='20' cols='300' wrap='soft' style='max-width: calc(100% - 7px)' autofocus='true' oninput='activateButton();' onclick='cancelTitle();' ></textarea>
@@ -72,9 +72,9 @@
                     document.getElementById('output').innerHTML = strLast + ' ' + strUpdate +': ' + window.updateUser + '<br>' + '<small>' + window.updateTime;
                }                    
                     
-                    // create draft if needed    
-                    changeLanguage();                 
+                    // create draft if needed                    
                     if (window.activated === true) {                       
+                         changeLanguage();                          
                          setDraft();                          
                     }
                     else {
@@ -84,7 +84,7 @@
 
 function activateButton() {
      document.getElementById('updateButton').disabled = false;
-     document.getElementById('updateButton').value = strSendMemo;
+     document.getElementById('updateButton').value = window.strSendMemo;
      window.activated = true;
 };
 		
@@ -130,7 +130,8 @@ function setTitle() {
 
 };
 
-function showPrv() {
+function showPrv() { 
+     window.showPrevious = true;  
      document.getElementById('input').disabled = true;
      document.getElementById('title').disabled = true;								      //deaktivate title input field
      document.getElementById('previous-button').style='display: none'; 				//hide Previous Button
@@ -140,9 +141,11 @@ function showPrv() {
      document.getElementById('input').value = window.prvContent; 
      document.getElementById('title').value = window.prvTitle; 
      document.getElementById('updateButton').disabled = true;
+     window.tmpDraftMsg = window.msg;
 };	
 
 function edit() {
+     window.showPrevious = false;  	
      document.getElementById('input').disabled = false;
      document.getElementById('title').disabled = false;								      
      document.getElementById('previous-button').style='display: yes; float: right'; 
@@ -151,7 +154,7 @@ function edit() {
      document.getElementById('title').value = window.title;
      document.getElementById('output').innerHTML = strLast + ' ' + strUpdate +': ' + window.updateUser + '<br>' + '<small>' + window.updateTime;
      if (window.activated === true) {
-          activateButton();		
+          activateButton();
      }			
 };	
 		
@@ -159,7 +162,7 @@ function sendMsg() {
      storeSentTime();	// Store Unixtime for Sent in locale storage
      window.activated = false;
      document.getElementById('updateButton').disabled = true;
-     document.getElementById('updateButton').value = strWasSent;
+     document.getElementById('updateButton').value = window.strWasSent;
      updateUser = window.webxdc.selfName;			
      window.msg = document.getElementById('input').value;
      window.date = Date();

@@ -19,11 +19,19 @@ function readUnixtime() {
 
 //handle if a new update arrives while memo is edited
 function setDraft() {
-     window.draft = strYourUpdate + '\n' + document.getElementById('input').value + '\n' + '\n' + strIncomUpdate + '\n' + window.msg;
+     if (window.showPrevious === true) { 
+          edit(); 
+          window.draft = strYourUpdate + '\n' + window.tmpDraftMsg + '\n' + '\n' + strIncomUpdate + '\n' + window.msg;
+     }
+     else {
+          window.draft = strYourUpdate + '\n' + document.getElementById('input').value + '\n' + '\n' + strIncomUpdate + '\n' + window.msg;
+     };
+     
      document.getElementById('input').value = window.draft;
      document.getElementById('updateButton').disabled = true;  
      
      // hide/deactivate elements
+     cancelTitle();
      document.getElementById('input').style='display: none';
      document.getElementById('previous-button').style='display: none';
      document.getElementById('updateButton').style='display: none';

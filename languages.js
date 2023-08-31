@@ -5,7 +5,7 @@ function changeLanguage() {
                //german
                strSendMemo = "Memo senden";
                strWasSent = "Memo wurde gesendet";
-               strPreviousUpdate = "Vorherige Änderung";
+               strPreviousUpdate = "Verlauf";
                strEditMemo = "Memo bearbeiten";
                strLast = "Letzte";
                strThis = "Diese";
@@ -21,7 +21,7 @@ function changeLanguage() {
                //french
                strSendMemo = "Envoyer mémo";
                strWasSent = "Mémo a été envoyé";
-               strPreviousUpdate = "Mise à jour précédente";
+               strPreviousUpdate = "Histoire";
                strEditMemo = "Éditer le mémo";
                strLast = "Dernier";
                strThis = "Cette";
@@ -38,7 +38,7 @@ function changeLanguage() {
                //fallback
                strSendMemo = "Send Memo";
                strWasSent = "Memo was sent";
-               strPreviousUpdate = "Previous Update";
+               strPreviousUpdate = "History";
                strEditMemo = "Edit Memo";
                strLast = "Last";
                strThis = "This";

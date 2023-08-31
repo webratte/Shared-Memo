@@ -38,17 +38,17 @@ function setDraft() {
      document.getElementById('title').disabled = true;
      
      // Show info
-     document.getElementById('draftinfo').style='display: yes; max-width: calc(100% - 7px); text-align:center'; 
-     document.getElementById('draft-button').style='display: yes'; 
+     document.getElementById('draftinfo').style='display: yes; max-width: calc(100% - 7px); text-align:center; border-radius: 5px;'; 
+     document.getElementById('draft-button').style='display: yes; border-radius: 5px;' ;
      
 };
 
 function closeInfo() {
      document.getElementById('draftinfo').style='display: none'; 
      document.getElementById('draft-button').style='display: none';
-     document.getElementById('input').style='display: yes; max-width: calc(100% - 7px)';
-     document.getElementById('updateButton').style='display: yes';
-     document.getElementById('previous-button').style='display: yes; float: right'; 
+     document.getElementById('input').style='display: yes; max-width: calc(100% - 7px); border-radius: 5px;';
+     document.getElementById('updateButton').style='display: yes; float: left; border-radius: 5px;';
+     document.getElementById('previous-button').style='display: yes; float: right; border-radius: 5px;'; 
      document.getElementById('title').disabled = false;
      
 };

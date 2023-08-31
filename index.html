@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
      <head>
           <title>Shared Memo</title>
@@ -7,44 +7,62 @@
           <script src='webxdc.js'></script>
           <script src='languages.js'></script>
           <script src='storage.js'></script>
+          <script src='history.js'></script>
      <style type='text/css'>
           body {
                font-family: Helvetica, Arial, sans-serif;
                background-color: #ECDD09;
-          }
+          };
      </style>
      </head>
      <body>
           <font size='6'> Shared Memo </font>
-          <font size='1'> by <a href="mailto:webratte+webxdc@mailbox.org">Webratte </a> Version 2.0 beta 1</font>
+          <font size='1'> by <a href="mailto:webratte+webxdc@mailbox.org">Webratte </a> Version 2.0</font>
           <form>
-               <br>
-               <div style='text-align:center;'>
-                    <input type='text' id='title' value='Memo' onclick='showButton();' oninput='activateTitleButton();' maxlength='14' size='14' style='background-color: #ECDD09; text-align:center;'>
-                    <input type='button' id='setTitleButton' disabled='true' onclick='setTitle();' style='display: none'>
+              
+               <div style='text-align:center;padding:5px;'>
+                    <input type='text' id='title' value='Memo' onclick='showButton();' oninput='activateTitleButton();' maxlength='14' size='14' style='background-color: #ECDD09; text-align:center; border-radius: 5px;'>
+                    <input type='button' id='setTitleButton' disabled='true' onclick='setTitle();' style='display: none; border-radius: 5px;'>
+               </div> 
+               <div style='text-align:center;padding:8px;'>
+                    <input type='button' id='updateButton' onclick='sendMsg();' style='float: left; border-radius: 5px;'>
+                    <input type='button' disabled id='previous-button' onclick='callHistory();' style='float: right; border-radius: 5px;'>
+                    <input type='button' id='edit-button' onclick='edit();'  style='display: none; border-radius: 5px;'><br>
                </div>
-               <input type='button' id='updateButton' onclick='sendMsg();'>
-               <input type='button' disabled id='previous-button' onclick='showPrv();' style='float: right'>
-               <input type='button' id='edit-button' onclick='edit();'  style='display: none'><br>
-               <textarea id='input' name='textfeld_01' rows='20' cols='300' wrap='soft' style='max-width: calc(100% - 7px)' autofocus='true' oninput='activateButton();' onclick='cancelTitle();' ></textarea>
-               <textarea id='draftinfo' disabled name='textfeld_02' rows='9' cols='300'  style='display: none;'></textarea>
-               <div style='text-align:center;'>               
-                    <br><input type='button' id='draft-button' onclick='closeInfo();' style='display: none'><br>
-               </div>         
+               <div style='text-align:center;padding:8px;'>   
+                    <textarea id='input' name='textfeld_01' rows='20' cols='300' wrap='soft' style='max-width: calc(100% - 16px); padding:6px; border-radius: 5px;' autofocus='true' oninput='activateButton();' onclick='cancelTitle();' ></textarea>
+                    <textarea id='draftinfo' disabled name='textfeld_02' rows='9' cols='300'  style='display: none; border-radius: 5px;'></textarea>
+               </div>
+               <div style='text-align:center;padding:8px;'>                      
+                    <input type='button' id='draft-button' onclick='closeInfo();' style='display: none; border-radius: 5px;'>
+                    <input type='button'  id='back-button' value="   >>    " onclick='historyBack();' style='display: none; border-radius: 5px;'>
+                    <input type='button'  id='forward-button' value="    <<    " onclick='historyForward();' style='display: none;border-radius: 5px;'><br>
+               </div>                      
           </form>
           <p id='output'></p>   
           <p><em><small id='deviceName'></small></em></p>
           <script>
+          
+          window.maxHistory = 10;                                   // Number of maximum previous Updates to show
+          const arrHistory = [];          
+          getStartValue();        
           changeLanguage(); 
                  
           // handle past and future state updates and intialize some elements
           document.getElementById('updateButton').disabled = true; // disable prv UpdateButton until the user changed the textarea
           window.webxdc.setUpdateListener(function (update) {
-          readUnixtime(); // Read last sent time from locale storage to compare with the time of the incoming message                 
-                                        	
+          readUnixtime();                                          // Read last sent time from locale storage to compare with the time of the incoming message                 
+               window.prvMsg = update.payload.msg;
+               window.prvTitle = update.payload.title;
+               window.prvUpdateUser = update.payload.updateUser;
+               window.prvUpdateDate = update.payload.date;
+               window.prvLastSerial = update.serial;
+               storeHistory();
+                                      	
                if (window.storedSentTime === null) {
                     window.storedSentTime = 0;
-               };		
+               };
+               		
                window.CurrentTime = update.payload.CurrentTime;
                if (window.CurrentTime === undefined) {
                     window.CurrentTime = 1;
@@ -58,19 +76,13 @@
                     window.updateUser = update.payload.updateUser;
                     window.updateTime = update.payload.date;					
                     document.getElementById('title').value = window.title;
-                    window.tmpTitle = window.title;
                     window.tmpContent = window.msg;
-                    window.tmpUpdateUser = window.updateUser;
                     window.prvTitle = update.payload.prvTitle;
-                    window.prvUpdateUser = update.payload.prvUpdateUser;
-                    window.tmpUpdateTime = window.updateTime;
-                    window.prvContent = update.payload.prvContent;
-                    window.prvUpdateTime = update.payload.prvUpdateTime;				
-                    if (window.prvContent != undefined) {
-                         document.getElementById('previous-button').disabled = false; 	//hide Previous Button if there is no previous update
+                    if (window.boolHistory == true) {
+                         document.getElementById('previous-button').disabled = false; 	//show Previous Button if there is minimum one update
                     };
                     document.getElementById('output').innerHTML = strLast + ' ' + strUpdate +': ' + window.updateUser + '<br>' + '<small>' + window.updateTime;
-               }                    
+               };                    
                     
                     // create draft if needed                    
                     if (window.activated === true) {                       
@@ -80,7 +92,9 @@
                     else {
                          document.getElementById('input').value = window.msg;
                     };
-          });
+          }, window.startSerial);
+          
+          storeStartSerial();
 
 function activateButton() {
      document.getElementById('updateButton').disabled = false;
@@ -91,7 +105,7 @@ function activateButton() {
 //show Ok button for set title	
 function showButton() {
      window.title = document.getElementById('title').value;
-     document.getElementById('setTitleButton').style='display: yes';
+     document.getElementById('setTitleButton').style='display: yes; border-radius: 5px;';
      if (document.getElementById('updateButton').disabled === false) {
           window.UpdateButtonActiv = true;				
      }
@@ -117,7 +131,7 @@ function cancelTitle() {
 //hide button for Set Title		
 function hideButton() {
      window.title = document.getElementById('title').value;
-     document.getElementById('setTitleButton').style='display: none';
+     document.getElementById('setTitleButton').style='display: none; border-radius: 5px;';
      window.activated = false;
      if (window.UpdateButtonActiv === true) {
           document.getElementById('updateButton').disabled = false;	
@@ -130,25 +144,13 @@ function setTitle() {
 
 };
 
-function showPrv() { 
-     window.showPrevious = true;  
-     document.getElementById('input').disabled = true;
-     document.getElementById('title').disabled = true;								      //deaktivate title input field
-     document.getElementById('previous-button').style='display: none'; 				//hide Previous Button
-     document.getElementById('edit-button').style='display: yes; float: right';		//make Edit Button visible			
-     window.msg = document.getElementById('input').value;
-     document.getElementById('output').innerHTML = strThis + ' ' + strUpdate +': ' + window.prvUpdateUser + '<br>' + '<small>' + window.prvUpdateTime;
-     document.getElementById('input').value = window.prvContent; 
-     document.getElementById('title').value = window.prvTitle; 
-     document.getElementById('updateButton').disabled = true;
-     window.tmpDraftMsg = window.msg;
-};	
-
 function edit() {
      window.showPrevious = false;  	
      document.getElementById('input').disabled = false;
      document.getElementById('title').disabled = false;								      
-     document.getElementById('previous-button').style='display: yes; float: right'; 
+     document.getElementById('previous-button').style='display: yes; float: right; border-radius: 5px;';
+     document.getElementById('back-button').style='display: none;'; 
+     document.getElementById('forward-button').style='display: none;'
      document.getElementById('edit-button').style='display: none';
      document.getElementById('input').value = window.msg;
      document.getElementById('title').value = window.title;
@@ -163,22 +165,18 @@ function sendMsg() {
      window.activated = false;
      document.getElementById('updateButton').disabled = true;
      document.getElementById('updateButton').value = window.strWasSent;
-     updateUser = window.webxdc.selfName;			
+     updateUser = window.webxdc.selfName;		
      window.msg = document.getElementById('input').value;
      window.date = Date();
-     window.prvTitle = window.tmpTitle;
-     window.prvContent = window.tmpContent;
-     window.prvUpdateUser = window.tmpUpdateUser;
-     window.prvUpdateTime = window.tmpUpdateTime;
-     window.title = document.getElementById('title').value;
+     window.title = document.getElementById('title').value;     
      
                info = "Shared Memo: " + '\'' + title + '\'' + " was changed by " + window.webxdc.selfName;
                lastChange = "Update: " + window.webxdc.selfName;
 
-     // send new updates
+     // send new updates  prvTitle, prvContent, prvUpdateUser, prvUpdateTime,
      window.webxdc.sendUpdate({
           payload: {
-               name: window.webxdc.selfName, msg, updateUser, prvTitle, prvContent, prvUpdateUser, prvUpdateTime, date, title, CurrentTime,
+               name: window.webxdc.selfName, msg, updateUser,  date, title, CurrentTime,
           },
           summary: lastChange,
           info,
@@ -195,11 +193,11 @@ function sendTitle() {
           window.msg = '';
      };		
      window.date = Date();
-     window.prvContent = window.tmpContent;
-     window.prvUpdateUser = window.tmpUpdateUser;
-     window.prvUpdateTime = window.tmpUpdateTime;
      window.prvTitle = window.tmpTitle;
      window.title = document.getElementById('title').value;
+     if (window.startSerial < 0) {
+          document.getElementById('previous-button').disabled = false; 	//show Previous Button if there is minimum one update
+     };     
      if (prvTitle === undefined) {
           prvTitle = "Memo";			
      }
@@ -209,7 +207,7 @@ function sendTitle() {
      // send new updates
      window.webxdc.sendUpdate({
           payload: {
-               name: window.webxdc.selfName, msg, updateUser, prvTitle, prvContent, prvUpdateUser, prvUpdateTime, date, title, CurrentTime,
+               name: window.webxdc.selfName, msg, updateUser, date, title, CurrentTime,
           },
           summary: lastChange,
           info,

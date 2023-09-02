@@ -5,7 +5,7 @@ function changeLanguage() {
                //german
                strSendMemo = "Memo senden";
                strWasSent = "Memo wurde gesendet";
-               strPreviousUpdate = "Vorherige Änderung";
+               strPreviousUpdate = "Verlauf";
                strEditMemo = "Memo bearbeiten";
                strLast = "Letzte";
                strThis = "Diese";
@@ -21,7 +21,7 @@ function changeLanguage() {
                //french
                strSendMemo = "Envoyer mémo";
                strWasSent = "Mémo a été envoyé";
-               strPreviousUpdate = "Mise à jour précédente";
+               strPreviousUpdate = "Histoire";
                strEditMemo = "Éditer le mémo";
                strLast = "Dernier";
                strThis = "Cette";
@@ -38,7 +38,7 @@ function changeLanguage() {
                //fallback
                strSendMemo = "Send Memo";
                strWasSent = "Memo was sent";
-               strPreviousUpdate = "Previous Update";
+               strPreviousUpdate = "History";
                strEditMemo = "Edit Memo";
                strLast = "Last";
                strThis = "This";
@@ -51,10 +51,10 @@ function changeLanguage() {
                strMessageDraft = "\nA change by " + window.updateUser +" just arrived.\nYour text has been temporarily saved as a draft.\n\n!! ATTENTION !!\nIt will be lost when the app is closed if the memo is not sent."
                strDraftButton = "  Show draft  ";
           }
-     document.getElementById("updateButton").value=window.strSendMemo;
-     document.getElementById("previous-button").value=window.strPreviousUpdate;
-     document.getElementById("edit-button").value=window.strEditMemo;
-     document.getElementById("setTitleButton").value=window.strSetTitle;
+     document.getElementById('updateButton').value=window.strSendMemo;
+     document.getElementById('previous-button').value=window.strPreviousUpdate;
+     document.getElementById('edit-button').value=window.strEditMemo;
+     document.getElementById('setTitleButton').value=window.strSetTitle;
      document.getElementById('draftinfo').value=window.strMessageDraft;
      document.getElementById('draft-button').value=window.strDraftButton;
 };

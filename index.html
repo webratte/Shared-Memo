@@ -19,7 +19,7 @@
           <font size='6'> Shared Memo </font>
           <font size='1'> by <a href="mailto:webratte+webxdc@mailbox.org">Webratte </a> Version 2.0</font>
           <form>
-              
+
                <div style='text-align:center;padding:5px;'>
                     <input type='text' id='title' value='Memo' onclick='showButton();' oninput='activateTitleButton();' maxlength='14' size='14' style='background-color: #ECDD09; text-align:center; border-radius: 5px;'>
                     <input type='button' id='setTitleButton' disabled='true' onclick='setTitle();' style='display: none; border-radius: 5px;'>
@@ -29,25 +29,25 @@
                     <input type='button' disabled id='previous-button' onclick='callHistory();' style='float: right; border-radius: 5px;'>
                     <input type='button' id='edit-button' onclick='edit();'  style='display: none; border-radius: 5px;'><br>
                </div>
-               <div style='text-align:center;padding:8px;'>   
+               <div style='text-align:center;padding:8px;'>
                     <textarea id='input' name='textfeld_01' rows='20' cols='300' wrap='soft' style='max-width: calc(100% - 16px); padding:6px; border-radius: 5px;' autofocus='true' oninput='activateButton();' onclick='cancelTitle();' ></textarea>
                     <textarea id='draftinfo' disabled name='textfeld_02' rows='9' cols='300'  style='display: none; border-radius: 5px;'></textarea>
                </div>
-               <div style='text-align:center;padding:8px;'>                      
+               <div style='text-align:center;padding:8px;'>
                     <input type='button' id='draft-button' onclick='closeInfo();' style='display: none; border-radius: 5px;'>
                     <input type='button'  id='back-button' value="   >>    " onclick='historyBack();' style='display: none; border-radius: 5px;'>
                     <input type='button'  id='forward-button' value="    <<    " onclick='historyForward();' style='display: none;border-radius: 5px;'><br>
-               </div>                      
+               </div>
           </form>
-          <p id='output'></p>   
+          <p id='output'></p>
           <p><em><small id='deviceName'></small></em></p>
           <script>
-                 
+
           window.maxHistory = 10;                                   // Number of maximum previous Updates to show
-          const arrHistory = [];          
+          const arrHistory = [];
           getStartValue();
           let intStartSerial = Number(startSerial);
-          changeLanguage(); 
+          changeLanguage();
 
           // handle past and future state updates and intialize some elements
           document.getElementById('updateButton').disabled = true; // disable prv UpdateButton until the user changed the textarea
@@ -60,23 +60,22 @@
                window.prvLastSerial = update.serial;
                storeHistory();
                storeStartSerial();
-                                      	
+
                if (window.storedSentTime === null) {
                     window.storedSentTime = 0;
                };
-               		
+
                window.CurrentTime = update.payload.CurrentTime;
                if (window.CurrentTime === undefined) {
                     window.CurrentTime = 1;
                };
-              
+
                if (window.CurrentTime >= window.storedSentTime) {   // if incoming message newer or the same age then the already stored, import new message                            
-                                   
                     storeIncomingTime();
                     window.msg = update.payload.msg;
                     window.title = update.payload.title;
                     window.updateUser = update.payload.updateUser;
-                    window.updateTime = update.payload.date;					
+                    window.updateTime = update.payload.date;
                     document.getElementById('title').value = window.title;
                     window.tmpContent = window.msg;
                     window.prvTitle = update.payload.prvTitle;
@@ -84,19 +83,17 @@
                          document.getElementById('previous-button').disabled = false; 	//show Previous Button if there is minimum one update
                     };
                     document.getElementById('output').innerHTML = strLast + ' ' + strUpdate +': ' + window.updateUser + '<br>' + '<small>' + window.updateTime;
-               };                    
-                    
-                    // create draft if needed                    
-                    if (window.activated === true) {                       
-                         changeLanguage();                          
-                         setDraft();                          
+               };
+
+                    // create draft if needed
+                    if (window.activated === true) {
+                         changeLanguage();
+                         setDraft();
                     }
                     else {
                          document.getElementById('input').value = window.msg;
                     };
           }, intStartSerial);
-          
-         // storeStartSerial();
 
 function activateButton() {
      document.getElementById('updateButton').disabled = false;
@@ -114,10 +111,10 @@ function showButton() {
      else {
            window.UpdateButtonActiv = false;	
      };
-     document.getElementById('previous-button').disabled = true;				
-     document.getElementById('updateButton').disabled = true;		
+     document.getElementById('previous-button').disabled = true;
+     document.getElementById('updateButton').disabled = true;
 };
-		
+
 //activate the 'set Title Button' if the title field was changed		
 function activateTitleButton() {
      document.getElementById('setTitleButton').disabled = false;
@@ -126,7 +123,7 @@ function activateTitleButton() {
 function cancelTitle() {
      if (document.getElementById('title').value != "Memo") {
           document.getElementById('title').value = window.title;
-     }						
+     }
      hideButton();
 };
 		
@@ -143,15 +140,14 @@ function hideButton() {
 function setTitle() {
      hideButton();
      sendTitle();
-
 };
 
 function edit() {
-     window.showPrevious = false;  	
+     window.showPrevious = false;
      document.getElementById('input').disabled = false;
-     document.getElementById('title').disabled = false;								      
+     document.getElementById('title').disabled = false;
      document.getElementById('previous-button').style='display: yes; float: right; border-radius: 5px;';
-     document.getElementById('back-button').style='display: none;'; 
+     document.getElementById('back-button').style='display: none;';
      document.getElementById('forward-button').style='display: none;'
      document.getElementById('edit-button').style='display: none';
      document.getElementById('input').value = window.msg;
@@ -167,11 +163,11 @@ function sendMsg() {
      window.activated = false;
      document.getElementById('updateButton').disabled = true;
      document.getElementById('updateButton').value = window.strWasSent;
-     updateUser = window.webxdc.selfName;		
+     updateUser = window.webxdc.selfName;
      window.msg = document.getElementById('input').value;
      window.date = Date();
-     window.title = document.getElementById('title').value;     
-     
+     window.title = document.getElementById('title').value;
+
                info = "Shared Memo: " + '\'' + title + '\'' + " was changed by " + window.webxdc.selfName;
                lastChange = "Update: " + window.webxdc.selfName;
 
@@ -189,7 +185,7 @@ function sendMsg() {
 //send changed title
 function sendTitle() {
      storeSentTime();	// Store Unixtime for Sent in locale storage
-     updateUser = window.webxdc.selfName;			
+     updateUser = window.webxdc.selfName;
      window.msg = window.tmpContent;
      if (window.msg === undefined) {
           window.msg = '';
@@ -201,7 +197,7 @@ function sendTitle() {
           document.getElementById('previous-button').disabled = false; 	//show Previous Button if there is minimum one update
      };     
      if (prvTitle === undefined) {
-          prvTitle = "Memo";			
+          prvTitle = "Memo";
      }
      info = "Shared Memo was renamed from " + '\'' + prvTitle + '\'' + " to " + '\'' + title + '\'' + " by"+" " + window.webxdc.selfName;
      lastChange = "Update: " + window.webxdc.selfName;

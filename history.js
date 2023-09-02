@@ -6,14 +6,14 @@ function storeHistory() {
 }; 
 
 function storeStartSerial() {
-     if (arrHistory.length <= (window.maxHistory * 5)) {
-     	    window.startSerial = 0
+     if (arrHistory.length < (window.maxHistory * 5)) {
+     	    window.startSerial = 0;
      }
      else{
      	    window.startSerial = arrHistory[arrHistory.length - ((window.maxHistory+3) * 5)]
      };
-     if (window.startSerial === null || window.startSerial === undefined || window.startSerial === 0) {
-     	    window.startSerial = window.tempStartSerial
+     if (window.startSerial === null || window.startSerial === undefined || window.startSerial === 0) {    	    
+     	    window.startSerial = window.tempStartSerial;
      };
      localStorage.setItem('lastSerial', window.startSerial);
 };
@@ -22,7 +22,7 @@ function getStartValue() {
           
 	  window.startSerial = localStorage.getItem('lastSerial');
      if (window.startSerial === null || window.startSerial === undefined) {
-          window.startSerial = 0
+          window.startSerial = 0;
      };
      window.tempStartSerial = window.startSerial;
 };

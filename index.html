@@ -42,12 +42,13 @@
           <p id='output'></p>   
           <p><em><small id='deviceName'></small></em></p>
           <script>
-          
+                 
           window.maxHistory = 10;                                   // Number of maximum previous Updates to show
           const arrHistory = [];          
-          getStartValue();        
+          getStartValue();
+          let intStartSerial = Number(startSerial);
           changeLanguage(); 
-                 
+
           // handle past and future state updates and intialize some elements
           document.getElementById('updateButton').disabled = true; // disable prv UpdateButton until the user changed the textarea
           window.webxdc.setUpdateListener(function (update) {
@@ -58,6 +59,7 @@
                window.prvUpdateDate = update.payload.date;
                window.prvLastSerial = update.serial;
                storeHistory();
+               storeStartSerial();
                                       	
                if (window.storedSentTime === null) {
                     window.storedSentTime = 0;
@@ -92,9 +94,9 @@
                     else {
                          document.getElementById('input').value = window.msg;
                     };
-          }, window.startSerial);
+          }, intStartSerial);
           
-          storeStartSerial();
+         // storeStartSerial();
 
 function activateButton() {
      document.getElementById('updateButton').disabled = false;
@@ -173,7 +175,7 @@ function sendMsg() {
                info = "Shared Memo: " + '\'' + title + '\'' + " was changed by " + window.webxdc.selfName;
                lastChange = "Update: " + window.webxdc.selfName;
 
-     // send new updates  prvTitle, prvContent, prvUpdateUser, prvUpdateTime,
+     // send new updates
      window.webxdc.sendUpdate({
           payload: {
                name: window.webxdc.selfName, msg, updateUser,  date, title, CurrentTime,

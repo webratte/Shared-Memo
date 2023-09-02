@@ -1,4 +1,4 @@
 name = "Shared Memo"
 source_code_url = "https://github.com/webratte/Shared-Memo"
-description = "Use this collaborative memo in groups, to keep all relevant datas in a central
-place without much scrolling. Or use it in "saved messages" to have your memos available all over your devices."
+description = "Use this collaborative memo in groups or 'Saved Messages' to keep all relevant datas in a central place all over your devices."
+tag_name = "v.2.0"

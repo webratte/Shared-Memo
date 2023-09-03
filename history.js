@@ -27,7 +27,6 @@ function getStartValue() {
 };
 
 function callHistory() {
-     window.timerActiv = false;
      document.getElementById('back-button').style='display: yes; float: right; border-radius: 5px;';
      document.getElementById('back-button').disabled = false;
      document.getElementById('forward-button').style='display: yes; float: left; border-radius: 5px;';
